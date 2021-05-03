@@ -45,6 +45,10 @@ def thankyou():
 	return render_template("thankyou.html")
 
 
+@app.route("/test")
+def test():
+	return "it is a test"
+
 @app.route("/api/attractions")
 def api_attractions():
 	page = request.args.get("page", 0, type = int) 
