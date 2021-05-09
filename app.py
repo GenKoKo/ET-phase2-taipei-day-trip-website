@@ -57,7 +57,7 @@ def api_attractions():
 	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	if keyword:
 		# count_target_data = cur.execute(f"Select count(*) FROM tpspot WHERE stitle LIKE '%{keyword}%'")
-		cur.execute(f"Select * FROM tpspot WHERE stitle LIKE '%{keyword}%'")
+		cur.execute(f"Select * FROM tpspot WHERE name LIKE '%{keyword}%'")
 	if not keyword:
 		# count_target_data = cur.execute("SELECT COUNT(*) FROM tpspot")
 		cur.execute("Select * FROM tpspot")
@@ -91,13 +91,14 @@ def api_attractions():
 @app.route("/api/attraction/<attractionId>")
 def api_attractionIDL(attractionId):
 	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-	cur.execute(f"Select * FROM tpspot WHERE _id = {attractionId}")
+	cur.execute(f"Select * FROM tpspot WHERE id = {attractionId}")
 	result = cur.fetchone()
 
 
 	# ref https://qiita.com/mink0212/items/52e0ebd66bd94e1303c1
 	if result:
-		dict = { 'data': {'id':result['_id'], 'name':result['stitle'], 'category':result['CAT2'], 'description':result['xbody'], 'address':result['address'], 'transport':result['info'],  'mrt':result['MRT'], 'latitude':result['latitude'], 'longitude':result['longitude'], 'images':result['file']}}     
+		dict = { 'data': result}     
+		# {'id':result['_id'], 'name':result['stitle'], 'category':result['CAT2'], 'description':result['xbody'], 'address':result['address'], 'transport':result['info'],  'mrt':result['MRT'], 'latitude':result['latitude'], 'longitude':result['longitude'], 'images':result['file']}
 		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 2), status=200)
 
 	elif not result:
@@ -112,7 +113,8 @@ def api_attractionIDL(attractionId):
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=3000, debug = True)	
+	# app.run(host='0.0.0.0', port=3000, debug = True)	
+	app.run(port=3000, debug = True)	
 
 
 
