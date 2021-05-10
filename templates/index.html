@@ -71,8 +71,7 @@
                 
                 let models = {getData:function(api){
                     data = null;
-                    fetch(api).then( (response) => {return response.json();});
-                    // .then( (result) => {this.data = result})
+                    fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then{() => {return this.data}};
                     }};
 
                 let views = {renderData:function(data){
@@ -115,9 +114,7 @@
                         
                         
                 let controllers = {init:function(){
-                    models.getData(api_url_default).then((data)=>{
-                            views.renderData(data);
-                        })
+                    models.getData(api_url_default).then((data)=>{ views.renderData(data);})
                     // spots.appendChild("lorem")
 
                     }};
