@@ -5,6 +5,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
             <title>One Day in Taipei GO!</title>
             <link rel="stylesheet" href="phase2.css" type="text/css">
+            <link rel="shortcut icon" href="#"/>
         </head>
 
         <body onload="init();">
@@ -78,7 +79,7 @@
                         }).then( (result) => {
                             for(let i = 0; i < 12; i++){
                             let spot_name = result["data"][i]["name"];
-                            let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
+                            let spot_image = "http://" + result["data"][i]["images"].split("http://")[1]
                             let mrt = result["data"][i]["mrt"];
                             let type = result["data"][i]["category"];
                             
