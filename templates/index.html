@@ -7,7 +7,7 @@
             <link rel="stylesheet" href="phase2.css" type="text/css">
         </head>
 
-        <body onload="controllers.init();">
+        <body onload="none_mvc.init();">
             <div class="container">
                 <div class="nav">
                     <div class="nav-content">
@@ -69,6 +69,45 @@
                 let spots = document.getElementById("spots");
                 let count = 0;
                 
+                let none_mvc = {init:function(){
+                    fetch(api_url_default).then( (response) => {return response.json();}).then( (result) => {
+                        for(let i = 0; i < 12; i++){
+                        let spot_name = result["data"][i]["name"];
+                        let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
+                        let mrt = result["data"][i]["mrt"];
+                        let type = result["data"][i]["category"];
+                        
+                        let picture_div = document.createElement("div");
+                        picture_div.className = "picture";
+                        
+                        let spot_image_img = document.createElement("img");
+                        spot_image_img.src = spot_image;
+                        picture_div.appendChild(spot_image_img);
+
+                        let spot_name_div = document.createElement("div");
+                        spot_name_div.className = "spot_name"
+                        picture_div.appendChild(spot_name_div);
+
+                        let detail_div = document.createElement("div");
+                        detail_div.className = "detail";
+            
+                        let mrt_div = document.createElement("div");
+                        mrt_div.className = "mrt";
+                        detail_div.appendChild(mrt_div);
+
+                        let category_div = document.createElement("div");
+                        category_div.className = "category";
+                        detail_div.appendChild(category_div);
+
+                        sopts.appendChild(picture_div);
+                        spots.appendChild(detail_div);
+                    });
+                    
+                
+
+
+
+
                 let models = {getData:function(api){
                     data = null;
                     fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then(() => {return this.data});
@@ -111,12 +150,9 @@
                     }};
 
 
-                        
-                        
                 let controllers = {init:function(){
                     models.getData(api_url_default).then((data)=>{ views.renderData(data);})
                     // spots.appendChild("lorem")
-
                     }};
 
 
