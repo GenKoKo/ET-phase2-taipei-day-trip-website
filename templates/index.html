@@ -71,15 +71,16 @@
                 
                 let models = {getData:function(api){
                     data = null;
-                    fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result});
+                    fetch(api).then( (response) => {return response.json();});
+                    // .then( (result) => {this.data = result})
                     }};
 
-                let views = {renderData:function(){
+                let views = {renderData:function(data){
                     for(let i = 0; i < 12; i++){
-                        let spot_name = models.data["data"][i]["name"];
+                        let spot_name = data["data"][i]["name"];
                         let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
-                        let mrt = models.data["data"][i]["mrt"];
-                        let type = models.data["data"][i]["category"];
+                        let mrt = data["data"][i]["mrt"];
+                        let type = data["data"][i]["category"];
                         
                         let picture_div = document.createElement("div");
                         picture_div.className = "picture";
@@ -114,8 +115,8 @@
                         
                         
                 let controllers = {init:function(){
-                    models.getData(api_url_default).then(()=>{
-                            views.renderData();
+                    models.getData(api_url_default).then((data)=>{
+                            views.renderData(data);
                         })
                     // spots.appendChild("lorem")
 
