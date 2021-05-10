@@ -6,10 +6,17 @@ from flask_mysqldb import MySQL,MySQLdb
 from decimal import Decimal
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 
-app=Flask(__name__)
+app = Flask(__name__,
+            static_folder="static",
+            static_url_path="/"
+        )
+
+CORS(app)
+
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.secret_key = os.getenv('secret_key')
@@ -113,7 +120,7 @@ def api_attractionIDL(attractionId):
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=3000, debug = True)	
+	app.run(host='0.0.0.0', port=3000)	
 	# app.run(port=3000, debug = True)	
 
 
