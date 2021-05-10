@@ -71,7 +71,7 @@
                 
                 let models = {getData:function(api){
                     data = null;
-                    fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then{() => {return this.data}};
+                    fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then(() => {return this.data});
                     }};
 
                 let views = {renderData:function(data){
