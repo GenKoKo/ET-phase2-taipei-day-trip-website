@@ -7,7 +7,7 @@
             <link rel="stylesheet" href="phase2.css" type="text/css">
         </head>
 
-        <body onload="none_mvc.init();">
+        <body onload="init();">
             <div class="container">
                 <div class="nav">
                     <div class="nav-content">
@@ -69,7 +69,9 @@
                 let spots = document.getElementById("spots");
                 let count = 0;
                 
-                let none_mvc = {init:function(){
+                // let none_mvc = {
+                
+                function init(){
                     fetch(api_url_default).then( (response) => {return response.json();}).then( (result) => {
                         for(let i = 0; i < 12; i++){
                         let spot_name = result["data"][i]["name"];
