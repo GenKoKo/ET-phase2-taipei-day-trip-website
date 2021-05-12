@@ -86,8 +86,9 @@ def api_attractions():
 	# 計算12個item
 	i = 0
 	while i < 12 and i < count_results:
-		# list_images = result[i+j]['images'].decode("utf-8").split(",")
-		list_images = result[i+j]['images'].split(b",")
+		list_images_replaced = result[i+j]['images'].decode('utf-8').replace("'","").replace("[","").replace("]","").replace(" ","")
+		list_images = list_images_replaced.split(",")
+		# list_images_replaced = list_images
 		result[i+j]['images'] = list_images
 		list_12.append(result[i+j])
 
