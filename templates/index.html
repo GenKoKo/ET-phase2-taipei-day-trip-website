@@ -107,8 +107,15 @@
                             category_div.className = "category";
                             detail_div.appendChild(category_div);
 
-                            spots.appendChild(picture_div);
-                            spots.appendChild(detail_div);
+                            let spot_div = document.createElement("div");
+                            spot_div.className = "spot"
+
+                            spot_div.appendChild(picture_div);
+                            spot_div.appendChild(detail_div);
+                            
+                            spots.appendChild(spot_div);
+
+
                             }
                         }
                         )
