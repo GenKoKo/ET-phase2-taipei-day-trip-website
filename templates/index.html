@@ -75,12 +75,13 @@
                 
                 let next_page = 0       
                 
-                function detector(next_page=0,search_keyword=null) {
+                function detector(next_page=0,search_keyword="") {
                     let page = "page="+next_page
                     let keyword = "&keyword="+search_keyword
-                    url = api_url_default+page+keyword
-                    let next_page = loader(url);
-
+                    let url = api_url_default+page+keyword
+                    next_page = loader(url);
+                    console.log(url)
+                    console.log(next_page)
                     // let rectObj = object.getBoundingClientRect();
                     // let from_top = rectObj.top
                     // let height_now = rectObj.height
