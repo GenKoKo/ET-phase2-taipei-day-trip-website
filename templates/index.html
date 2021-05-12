@@ -78,23 +78,26 @@
                         return response.json();
                         }).then( (result) => {
                             for(let i = 0; i < 12; i++){
-                            let spot_name = result["data"][i]["name"];
+                            let proto_name = result["data"][i]["name"];
 
-                            let spot_image = result["data"][i]["images"][0]
+                            let proto_image = result["data"][i]["images"][0]
                             // let spot_image = spot_image_proto.replace("','","")
-                            let mrt = result["data"][i]["mrt"];
-                            let type = result["data"][i]["category"];
+                            let proto_mrt = result["data"][i]["mrt"];
+                            let proto_category = result["data"][i]["category"];
                             
                             let picture_div = document.createElement("div");
                             picture_div.className = "picture";
                             
                             let spot_image_img = document.createElement("img");
-                            spot_image_img.src = spot_image;
+                            spot_image_img.src = proto_image;
                             picture_div.appendChild(spot_image_img);
 
                             let spot_name_div = document.createElement("div");
                             spot_name_div.className = "spot_name"
                             picture_div.appendChild(spot_name_div);
+
+                            let spot_name = document.createTextNode(proto_name);
+                            spot_name_div.appendChild(spot_name);
 
                             let detail_div = document.createElement("div");
                             detail_div.className = "detail";
@@ -103,9 +106,15 @@
                             mrt_div.className = "mrt";
                             detail_div.appendChild(mrt_div);
 
+                            let mrt = document.createTextNode(proto_mrt);
+                            mrt_div.appendChild(mrt);
+
                             let category_div = document.createElement("div");
                             category_div.className = "category";
                             detail_div.appendChild(category_div);
+
+                            let category = document.createTextNode(proto_category);
+                            category_div.appendChild(category);
 
                             let spot_div = document.createElement("div");
                             spot_div.className = "spot"
