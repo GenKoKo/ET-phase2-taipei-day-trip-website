@@ -6,7 +6,7 @@ from flask_mysqldb import MySQL,MySQLdb
 from decimal import Decimal
 import os
 from dotenv import load_dotenv
-from flask_cors import CORS
+# from flask_cors import CORS
 
 load_dotenv()
 
@@ -15,7 +15,7 @@ app = Flask(__name__,
             static_url_path="/"
         )
 
-CORS(app)
+# CORS(app)
 
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
@@ -33,6 +33,8 @@ class MyEncoder(json.JSONEncoder):
             return str(obj, encoding='utf-8')
         elif isinstance(obj, Decimal ):
             return float(obj)
+		# elif isinstance(obj, str):
+		# 	return list(obj)
         return json.JSONEncoder.default(self, obj)
         # return str(obj, encoding='utf-8')
 
@@ -74,15 +76,20 @@ def api_attractions():
 	result = list(results)
 	count_results = len(results)
 	pages = len(result)//12+1
-	
+	# result_str = open(result,'r')
 	
 	list_12 = []
+	list_images =[]
 	# 翻頁
 	j=page*12
 	# 計算12個item
 	i = 0
 	while i < 12 and i < count_results:
+		# list_images = result[i+j]['images'].decode("utf-8").split(",")
+		list_images = result[i+j]['images'].split(b",")
+		result[i+j]['images'] = list_images
 		list_12.append(result[i+j])
+
 		i += 1
 
 	nextPage = page+1 if page < pages-1 else None
@@ -120,8 +127,8 @@ def api_attractionIDL(attractionId):
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=3000)	
-	# app.run(port=3000, debug = True)	
+	# app.run(host='0.0.0.0', port=3000)	
+	app.run(port=3000, debug = True)	
 
 
 
