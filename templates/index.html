@@ -8,7 +8,7 @@
             <link rel="shortcut icon" href="#"/>
         </head>
 
-        <body onload="init();">
+        <body onload="detector();">
             <div class="container">
                 <div class="nav">
                     <div class="nav-content">
@@ -63,7 +63,7 @@
             </div>
             
             <script type="text/javascript">
-                api_url_default = "http://54.168.152.131:3000/api/attractions";
+                api_url_default = "http://54.168.152.131:3000/api/attractions?";
                 api_url_spot_id = "http://54.168.152.131:3000/api/attraction/";
                 api_url_search = "http://54.168.152.131:3000/api/attractions?keyword=";
 
@@ -72,9 +72,30 @@
                 
                 // let none_mvc = {
                 
-                function init(){
+                
+                let next_page = 0       
+                
+                function detector(next_page=0,search_keyword=null) {
+                    let page = "page="+next_page
+                    let keyword = "&keyword="+search_keyword
+                    url = api_url_default+page+keyword
+                    let next_page = loader(url);
 
-                    fetch(api_url_default).then( (response) => {
+                    // let rectObj = object.getBoundingClientRect();
+                    // let from_top = rectObj.top
+                    // let height_now = rectObj.height
+                    // let to_bottom = height_now - from_top
+
+                    // if (next_page) and to_bottom < 50px {
+
+                    // }
+
+                }
+                
+                
+                function loader(api){
+
+                    fetch(api).then( (response) => {
                         return response.json();
                         }).then( (result) => {
                             for(let i = 0; i < 12; i++){
@@ -124,12 +145,19 @@
                             spot_div.appendChild(detail_div);
                             
                             spots.appendChild(spot_div);
-
-
+                            
+                            // count += 1
                             }
+
+                            let next_page = result["nextPage"]
+
+                            return next_page 
+
+
                         }
                         )
                 }
+
                     
                 
                 

@@ -113,6 +113,10 @@ def api_attractionIDL(attractionId):
 
 	# ref https://qiita.com/mink0212/items/52e0ebd66bd94e1303c1
 	if result:
+		image_replaced = result['images'].decode('utf-8').replace("'","").replace("[","").replace("]","").replace(" ","")
+		image_splited = image_replaced.split(",")
+		result['images'] = image_splited
+
 		dict = { 'data': result}     
 		# {'id':result['_id'], 'name':result['stitle'], 'category':result['CAT2'], 'description':result['xbody'], 'address':result['address'], 'transport':result['info'],  'mrt':result['MRT'], 'latitude':result['latitude'], 'longitude':result['longitude'], 'images':result['file']}
 		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 2), status=200)
