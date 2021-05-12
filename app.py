@@ -7,6 +7,7 @@ from decimal import Decimal
 import os
 from dotenv import load_dotenv
 # from flask_cors import CORS
+import platform
 
 load_dotenv()
 
@@ -127,8 +128,13 @@ def api_attractionIDL(attractionId):
 
 
 if __name__ == "__main__":
-	# app.run(host='0.0.0.0', port=3000)	
-	app.run(port=3000, debug = True)	
+	if platform.system().lower() == "linux":
+		print("SYSTEM is " + platform.system().lower())
+		app.run(host='0.0.0.0', port=3000)		
+
+	elif platform.system().lower() == "windows":
+		print("SYSTEM is " + platform.system().lower())
+		app.run(port=3000, debug = True)	
 
 
 
