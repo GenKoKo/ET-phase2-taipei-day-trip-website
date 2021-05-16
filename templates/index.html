@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8"></meta>
+            <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
+            <title>One Day in Taipei GO!</title>
+            <link rel="stylesheet" href="phase2.css" type="text/css">
+            <link rel="shortcut icon" href="#"/>
+        </head>
+
+        <body onload="processor();">
+            <div class="container">
+                <div class="nav">
+                    <div class="nav-content">
+                        <div id="taipei">台北一日遊</div>
+                        <div class="blank"></div>
+                        <div class="button">
+                            <div id="booking">預定行程</div> 
+                            <div id="login">登入/註冊</div> 
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="hero">
+                    <div class="subtitle">
+                        <div class="hero1">輕鬆享受台北一日悠閒</div>
+                        <div class="hero2">探索每個角落，體驗城市的深度旅遊行程</div>
+                        <form name="form_input">
+                            <input type="text" name="search_keyword" placeholder="輸入景點名稱查詢" required/> 
+                            <button onclick ="processSearch();" type="button" ></button>
+                        </form>                      
+                    </div>               
+                </div>         
+
+                <div class="attractions">
+                   <div id="spots"></div>
+                   <div id="error"></div>
+                </div>
+
+                <div class="footer">
+                    <div>COPYRIGHT © 2021 台北一日遊</div>
+                </div>
+
+            </div>
+            
+            <script type="text/javascript">
+                localHost = "http://127.0.0.1:3000/" // for develop
+                EC2Host = "http://54.168.152.131:3000/" //for deploy
+                api_url_default = EC2Host+"api/attractions?";
+                api_url_spot_id = localHost+"api/attraction/";
+                
+                let spots = document.getElementById("spots");
+                let next_page_now = 0;
+                
+                let detector_throttle = throttle(500,500)
+                window.addEventListener("scroll", detector_throttle)
+                
+                let processKeyword=""; //若沒有設定此變數 在搜尋時load第2頁開始會出現偏離
+                function processSearch(){
+                    document.getElementById("spots").innerHTML = "";
+                    document.getElementById("error").innerHTML = "";
+                    next_page_now = 0;
+                    next_page_before = null;
+                    let form = document.forms['form_input'];
+                    let search_keyword = form.elements.search_keyword.value;
+                    processKeyword = search_keyword
+                    processor(next_page_now, processKeyword);
+
+                }
+
+                function throttle( delay,mustRunDelay ){
+                    let startTime, timestamp , timer;
+                    return function(){
+                        timestamp = +new Date();
+                        clearTimeout(timer)
+                        if (!startTime){
+                            startTime = timestamp
+                        }
+                        if (timestamp - startTime >= mustRunDelay){
+                            detector()
+                            startTime = timestamp;
+                        }else{
+                            timer = setTimeout(function(){detector()},delay)
+                        }
+                    }
+                }
+                
+                function detector(){
+                    let triggerDistance = 500;
+                    let distance = spots.getBoundingClientRect().bottom - window.innerHeight;
+                    if ( distance < triggerDistance ) { 
+                        processor(next_page_now, processKeyword);
+                    }
+                    
+                }
+                
+                let next_page, search_keyword;
+                let next_page_before;
+                
+                function processor(next_page=0,search_keyword="") {
+                    // 判斷是否有重覆load同頁面
+                    if (next_page_before !== next_page_now){
+                        let page = "page="+next_page_now
+                        let keyword = "&keyword="+search_keyword
+                        let url = api_url_default+page+keyword
+                        loader(url)
+                        next_page_before = next_page_now;
+                    }
+                }
+                
+                
+                
+                function loader(api){
+                    
+                    fetch(api).then( (response) => {
+                        return response.json();
+                        }).then( (result) => {
+
+                            if(result['error']){
+                                let error = document.getElementById('error');
+                                let error_infro = document.createTextNode('抱歉，查無結果。');
+                                error.appendChild(error_infro);
+                            }
+
+                            for(let i = 0; i < 12; i++){
+                            let proto_name = result["data"][i]["name"];
+                            let proto_image = result["data"][i]["images"][0]
+                            let proto_mrt = result["data"][i]["mrt"];
+                            let proto_category = result["data"][i]["category"];
+                            
+                            let picture_div = document.createElement("div");
+                            picture_div.className = "picture";
+                            
+                            let spot_image_img = document.createElement("img");
+                            spot_image_img.className = "spot_image"
+                            spot_image_img.src = proto_image;
+                            picture_div.appendChild(spot_image_img);
+
+                            let spot_name_div = document.createElement("div");
+                            spot_name_div.className = "spot_name"
+                            picture_div.appendChild(spot_name_div);
+
+                            let spot_name = document.createTextNode(proto_name);
+                            spot_name_div.appendChild(spot_name);
+
+                            let detail_div = document.createElement("div");
+                            detail_div.className = "detail";
+                
+                            let mrt_div = document.createElement("div");
+                            mrt_div.className = "mrt";
+                            detail_div.appendChild(mrt_div);
+
+                            let mrt = document.createTextNode(proto_mrt);
+                            mrt_div.appendChild(mrt);
+
+                            let category_div = document.createElement("div");
+                            category_div.className = "category";
+                            detail_div.appendChild(category_div);
+
+                            let category = document.createTextNode(proto_category);
+                            category_div.appendChild(category);
+
+                            let spot_div = document.createElement("div");
+                            spot_div.className = "spot"
+
+                            spot_div.appendChild(picture_div);
+                            spot_div.appendChild(detail_div);
+                            
+                            spots.appendChild(spot_div);
+                            }
+
+                            next_page_now = result["nextPage"]
+
+                        }
+                        )
+                    
+                }
+                    
+                    
+                
+                // MVC model
+                // let models = {getData:function(api){
+                //     data = null;
+                //     fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then(() => {return this.data});
+                //     }};
+
+                // let views = {renderData:function(data){
+                //     for(let i = 0; i < 12; i++){
+                //         let spot_name = data["data"][i]["name"];
+                //         let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
+                //         let mrt = data["data"][i]["mrt"];
+                //         let type = data["data"][i]["category"];
+                        
+                //         let picture_div = document.createElement("div");
+                //         picture_div.className = "picture";
+                        
+                //         let spot_image_img = document.createElement("img");
+                //         spot_image_img.src = spot_image;
+                //         picture_div.appendChild(spot_image_img);
+
+                //         let spot_name_div = document.createElement("div");
+                //         spot_name_div.className = "spot_name"
+                //         picture_div.appendChild(spot_name_div);
+
+                //         let detail_div = document.createElement("div");
+                //         detail_div.className = "detail";
+            
+                //         let mrt_div = document.createElement("div");
+                //         mrt_div.className = "mrt";
+                //         detail_div.appendChild(mrt_div);
+
+                //         let category_div = document.createElement("div");
+                //         category_div.className = "category";
+                //         detail_div.appendChild(category_div);
+
+                //         sopts.appendChild(picture_div);
+                //         spots.appendChild(detail_div);
+
+
+                //         }
+                //     }};
+
+
+                // let controllers = {init:function(){
+                //     models.getData(api_url_default).then((data)=>{ views.renderData(data);})
+                //     // spots.appendChild("lorem")
+                //     }};
+
+
+            </script>
+            
+        </body>
+
+    </html>
+

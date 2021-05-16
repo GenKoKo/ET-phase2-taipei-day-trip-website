@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MVC in Front-End</title>
+</head>
+<body>
+	<h3>產品資料</h3>
+	<div id="list"></div>
+	<script>
+		/*
+			MVC (Model-View-Controller)
+			資料處理 - 畫面處理 - 控制流程
+		*/
+		// models
+		let models={
+			data:null,
+			removeProductData:function(name){
+				this.data=this.data.filter((product)=>{
+					return product.name!==name;
+				});
+			},
+			getProductData:function(){
+				let url="https://cwpeng.github.io/live-records-samples/data/products.json";
+				return fetch(url).then((response)=>{
+					return response.json();
+				}).then((result)=>{
+					this.data=result;
+				});
+			}
+		};
+		// views
+		let views={
+			renderData:function(){
+				const list=document.querySelector("#list");
+				list.innerHTML=""; // 先清空畫面
+				models.data.forEach((product)=>{
+					const item=document.createElement("div");
+					item.textContent=product.name;
+					item.addEventListener("click", controller.removeProduct);
+					list.appendChild(item);
+				});
+			}
+		}
+		// controllers
+		let controller={
+			removeProduct:function(e){
+				models.removeProductData(e.currentTarget.textContent);
+				views.renderData();
+			},
+			init:function(){
+				models.getProductData().then(()=>{
+					views.renderData();
+				});
+			}
+		};
+		controller.init();
+		/* 以下直覺式的寫法
+		let url="https://cwpeng.github.io/live-records-samples/data/products.json";
+		fetch(url).then((response)=>{
+			return response.json();
+		}).then((result)=>{
+			const list=document.querySelector("#list");
+			result.forEach((product)=>{
+				const item=document.createElement("div");
+				item.textContent=product.name;
+				item.addEventListener("click", function(){
+					list.removeChild(item);
+				});
+				list.appendChild(item);
+			});
+		});
+		*/
+	</script>
+</body>
+</html>

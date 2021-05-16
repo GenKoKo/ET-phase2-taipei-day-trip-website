@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
+        <title>test3</title>
+
+    </head>
+    <body onload="test_api();">
+       <div id="test"></div>
+    </body>
+
+</html>
+
+<script type="text/javascript">
+    api_url_default = "http://54.168.152.131:3000/api/attractions";
+    api_url_spot_id = "http://54.168.152.131:3000/api/attraction/";
+    api_url_search = "http://54.168.152.131:3000/api/attractions?keyword=";
+    api_test = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions.json"
+
+    let spots = document.getElementById("spots");
+    let count = 0;
+    
+    let models = {getData:function(api){
+        data = null;
+        fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result});
+        }};
+
+    let views = {renderData:function(){
+        for(let i = 0; i < 12; i++){
+            let spot_name = models.data["data"][i]["name"];
+            let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
+            let mrt = models.data["data"][i]["mrt"];
+            let type = models.data["data"][i]["category"];
+            
+            let picture_div = document.createElement("div");
+            picture_div.className = "picture";
+            
+            let spot_image_img = document.createElement("img");
+            spot_image_img.src = spot_image;
+            picture_div.appendChild(spot_image_img);
+
+            let spot_name_div = document.createElement("div");
+            spot_name_div.className = "spot_name"
+            picture_div.appendChild(spot_name_div);
+
+            let detail_div = document.createElement("div");
+            detail_div.className = "detail";
+
+            let mrt_div = document.createElement("div");
+            mrt_div.className = "mrt";
+            detail_div.appendChild(mrt_div);
+
+            let category_div = document.createElement("div");
+            category_div.className = "category";
+            detail_div.appendChild(category_div);
+
+            sopts.appendChild(picture_div);
+            spots.appendChild(detail_div);
+
+
+            }
+        }};
+
+
+            
+            
+    let controllers = {init:function(){
+        models.getData(api_url_default).then(()=>{
+                views.renderData();
+            })
+        // spots.appendChild("lorem")
+
+        }};
+    
+        function test_api(){
+            fetch(api_url_default).then((response)=>{return response.json();}).then( (result) =>  {
+            let test_content = document.getElementById("test")
+            let test_node = document.createTextNode("test_node")
+            
+            test_node.appendChild(result);
+            test_content.appendChild(test_node);
+
+        })
+    };
+
+</script>
+

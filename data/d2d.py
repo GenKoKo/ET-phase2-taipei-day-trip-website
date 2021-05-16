@@ -31,7 +31,7 @@ try:
     with conn.cursor() as cursor: 
         # 重開新的table
         cursor.execute("DROP TABLE IF EXISTS tpspot")
-        cursor.execute("CREATE TABLE tpspot (_id bigint NOT NULL, stitle varchar(255) , CAT2 varchar(255), xbody varchar(5000), address varchar(255), info varchar(5000), MRT varchar(255),latitude decimal(8,6) , longitude decimal(9,6) ,file blob(65535) ,PRIMARY KEY(_id))")
+        cursor.execute("CREATE TABLE tpspot (id bigint NOT NULL, name varchar(255) , category varchar(255), description varchar(5000), address varchar(255), transport varchar(5000), mrt varchar(255), latitude decimal(8,6) , longitude decimal(9,6) ,images blob(65535) ,PRIMARY KEY(id))")
 
         # 測試 MySQL connect
         # command2 = "Select * from tpspot"
@@ -61,7 +61,7 @@ try:
 
             url_list_string = str(aggregate_photo_url)   
             
-            command = "INSERT INTO tpspot (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, file) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            command = "INSERT INTO tpspot (id, name, category, description, address, transport, mrt, latitude, longitude, images) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(command, (spot['_id'],spot['stitle'],spot['CAT2'], spot['xbody'], spot['address'], spot['info'], spot['MRT'], Decimal(spot['latitude'].strip('"')), Decimal(spot['longitude'].strip('"')), url_list_string))
             conn.commit()   
         
