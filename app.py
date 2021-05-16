@@ -59,10 +59,12 @@ def thankyou():
 def test():
 	return "it is a test"
 
-@app.route("/api/attractions")
+@app.route("/api/attractions", methods=["GET","POST"])
 def api_attractions():
+	
 	page = request.args.get("page", 0, type = int) 
 	keyword = request.args.get("keyword", type = str)
+	# keyword = request.form("search",None, type = str)
 	
 	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 	if keyword:
