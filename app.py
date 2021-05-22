@@ -6,7 +6,6 @@ from flask_mysqldb import MySQL,MySQLdb
 from decimal import Decimal
 import os
 from dotenv import load_dotenv
-# from flask_cors import CORS
 import platform
 
 load_dotenv()
@@ -16,7 +15,6 @@ app = Flask(__name__,
             static_url_path="/"
         )
 
-# CORS(app)
 
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
@@ -100,10 +98,10 @@ def api_attractions():
 
 	if results:
 		dict = { 'nextPage': nextPage, 'data': list_12}     
-		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 2), status=200)
+		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
 	else:
 		dict = {'error': True, 'message': "it is 500 ERROR~伺服器內部錯誤"}
-		return Response(response=json.dumps(dict, indent = 2),status=500)
+		return Response(response=json.dumps(dict, indent = 4),status=500)
 
 
 @app.route("/api/attraction/<attractionId>")
@@ -121,15 +119,15 @@ def api_attractionIDL(attractionId):
 
 		dict = { 'data': result}     
 		# {'id':result['_id'], 'name':result['stitle'], 'category':result['CAT2'], 'description':result['xbody'], 'address':result['address'], 'transport':result['info'],  'mrt':result['MRT'], 'latitude':result['latitude'], 'longitude':result['longitude'], 'images':result['file']}
-		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 2), status=200)
+		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
 
 	elif not result:
 		dict = {'error': True, 'message': "it is 400 ERROR~景點編號不正確"}
-		return Response(response=json.dumps(dict, indent = 2), status=400)
+		return Response(response=json.dumps(dict, indent = 4), status=400)
 
 	else:
 		dict = {'error': True, 'message': "it is 500 ERROR~伺服器內部錯誤"}
-		return Response(response=json.dumps(dict, indent = 2),status=500)
+		return Response(response=json.dumps(dict, indent = 4),status=500)
 
 
 

@@ -4,7 +4,7 @@
             <meta charset="utf-8"></meta>
             <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
             <title>One Day in Taipei GO!</title>
-            <link rel="stylesheet" href="phase2.css" type="text/css">
+            <link rel="stylesheet" href="index.css" type="text/css">
             <link rel="shortcut icon" href="#"/>
         </head>
 
@@ -12,7 +12,7 @@
             <div class="container">
                 <div class="nav">
                     <div class="nav-content">
-                        <div id="taipei">台北一日遊</div>
+                        <div id="taipei"> <a href='/'>台北一日遊</a> </div>
                         <div class="blank"></div>
                         <div class="button">
                             <div id="booking">預定行程</div> 
@@ -45,10 +45,9 @@
             </div>
             
             <script type="text/javascript">
-                localHost = "http://127.0.0.1:3000/" // for develop
-                EC2Host = "http://54.168.152.131:3000/" //for deploy
-                api_url_default = EC2Host+"api/attractions?";
-                api_url_spot_id = localHost+"api/attraction/";
+                let localHost = "http://127.0.0.1:3000/" // for develop
+                let EC2Host = "http://54.168.152.131:3000/" //for deploy
+                let api_url_default = localHost+"api/attractions?";
                 
                 let spots = document.getElementById("spots");
                 let next_page_now = 0;
@@ -128,19 +127,25 @@
                             let proto_image = result["data"][i]["images"][0]
                             let proto_mrt = result["data"][i]["mrt"];
                             let proto_category = result["data"][i]["category"];
+                            let proto_id = result["data"][i]["id"];
                             
+                            let link_a = document.createElement("a");
+                            link_a.href = "/attraction/" + proto_id;
+
                             let picture_div = document.createElement("div");
                             picture_div.className = "picture";
                             
                             let spot_image_img = document.createElement("img");
                             spot_image_img.className = "spot_image"
                             spot_image_img.src = proto_image;
-                            picture_div.appendChild(spot_image_img);
+                            link_a.appendChild(spot_image_img)
+
+                            picture_div.appendChild(link_a);
 
                             let spot_name_div = document.createElement("div");
                             spot_name_div.className = "spot_name"
                             picture_div.appendChild(spot_name_div);
-
+                            
                             let spot_name = document.createTextNode(proto_name);
                             spot_name_div.appendChild(spot_name);
 
@@ -164,6 +169,7 @@
                             let spot_div = document.createElement("div");
                             spot_div.className = "spot"
 
+                            
                             spot_div.appendChild(picture_div);
                             spot_div.appendChild(detail_div);
                             

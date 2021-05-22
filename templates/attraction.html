@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8"></meta>
+            <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
+            <title>One Day in Taipei GO!</title>
+            <link rel="stylesheet" href="../attraction.css" type="text/css">
+            <link rel="shortcut icon" href="#"/>
+        </head>
+        
+        <body onload='processor();'>
+            <div class="container">
+                <div class="nav">
+                    <div class="nav-content">
+                        <div id="taipei"><a href='/'>台北一日遊</a> </div>
+                        <div class="blank"></div>
+                        <div class="button">
+                            <div id="booking">預定行程</div> 
+                            <div id="login">登入/註冊</div> 
+                        </div>
+                    </div>
+                </div>
+
+                <div id="main">
+                    <div class="section">
+                        <div class="picture_current_container">
+                            <img src="/arrow-left.png" id='prevBtn'></i>
+                            <img src='/arrow-right.png' id='nextBtn'></i>
+                            <div id="carousel_slide"></div>
+                        </div>
+
+                        <div class="profile">
+                            <div id="name"></div>
+                            <div id="location"></div>
+                            <div class="booking_detail_container">
+                                <div class="booking_detail">
+                                    <div class="detail_title">訂購導覽行程</div>
+                                    <div class="detail_description"> <p>以此景點為中心的一日行程，帶您探索城市角落故事</p></div>
+                                    <div class="detail_title">
+                                        <p style="margin-right: 5px;">選擇日期：</p>
+                                        <input id="date" type="date" >
+                                    </div>
+                                    <div class="detail_title">
+                                        <p style="margin-right: 10px;">選擇時間：</p>
+                                        <label for="radio_am" class="radio">
+                                            <input type="radio" name="time" id="radio_am" value="am"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div><p style="margin-right:18px">上半天</p>
+                                        
+                                        <label for="radio_pm" class="radio">
+                                            <input type="radio" name="time" id="radio_pm" value="pm"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div> 下半天
+                                        </label>
+                                    </div>
+                                    <div class="detail_title">
+                                        <p style="margin-right:5px">導覽費用：</p>
+                                        <div class="detail_description" id="booking_price">新台幣 ____ 元</div>
+                                    </div>
+                                    <button type="button" class="start_booking"> <p>開始預訂行程</p> </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="infors">
+                        <div id="description"></div>
+                        <div class="infros_title">
+                            <p>景點地址：</p>
+                            <div id="address"></div>
+                        </div>
+                        <div class="infros_title">
+                            <p>交通方式：</p>
+                            <div id="transport"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <div>COPYRIGHT © 2021 台北一日遊</div>
+                </div>
+                
+            </div>
+            
+            <script type="text/javascript">
+                const localHost = "http://127.0.0.1:3000/" // for develop
+                const EC2Host = "http://54.168.152.131:3000/" //for deploy
+                let api_url_spot_id = localHost+"api/attraction/";
+
+                let id = null;
+                function processor(){
+                    let pathname = window.location.pathname
+                    let id = pathname.replace('/attraction/','')
+                    console.log("🚀 ~ file: attraction.html ~ line 48 ~ getID ~ id", id)
+
+                    loader(id);
+                }
+
+                let img_counter = 0;
+                let imgs_in_carousel;
+                let image_width;
+                function loader(id){
+                    let api_target_spot = api_url_spot_id + id
+                    fetch(api_target_spot).then( (res) => {return res.json();}).then( (result) =>{
+                        let api_init = result['data']
+                        let name = api_init['name']
+                        let address = api_init['address']
+                        let category = api_init['category']
+                        let description = api_init['description']
+                        let images = api_init['images']
+                        let mrt = api_init['mrt']
+                        let transport = api_init['transport']  
+
+                        let name_id = document.getElementById('name')
+                        name_id.append(name)
+
+                        let address_id = document.getElementById('address')
+                        address_id.append(address)
+                        
+                        let description_id = document.getElementById('description')
+                        description_id.append(description)
+                        
+                        
+                        let tranport_id = document.getElementById('transport')
+                        tranport_id.append(transport)
+                        
+                        let location_id = document.getElementById('location')
+                        location_id.append(category+" at "+mrt)
+                        
+                        let carousel_slide_id = document.getElementById('carousel_slide')
+                        
+                        
+                        let image_last = document.createElement('img')
+                        image_last.className = 'image'
+                        image_last.id = 'lastClone'
+                        image_last.src = images[images.length-1]
+                        carousel_slide_id.appendChild(image_last)                        
+                        
+                        while(images[img_counter]){
+                            let image = document.createElement('img')
+                            image.className = 'image'
+                            image.src = images[img_counter]
+                            carousel_slide_id.appendChild(image)
+                            img_counter++
+                            
+                        }
+
+                        let image_first = document.createElement('img')
+                        image_first.className = 'image'
+                        image_first.id = 'firstClone'
+                        image_first.src = images[0]
+                        carousel_slide_id.appendChild(image_first)  
+
+
+                        imgs_in_carousel = document.querySelectorAll("#carousel_slide img") 
+                        image_width = imgs_in_carousel[0].width
+                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
+                    })
+                }
+                
+                
+                const carouselSlide = document.querySelector('#carousel_slide')
+                
+                const prevBtn = document.querySelector('#prevBtn')
+                const nextBtn = document.querySelector('#nextBtn')
+                let slide_counter = 1;
+                nextBtn.addEventListener('click', () =>{
+                    console.log("🚀 ~ file: attraction.html ~ line 154 ~ fetch ~ image_width", image_width)
+                    if(slide_counter >= imgs_in_carousel.length-1) return;
+                    carouselSlide.style.transition = 'transform 0.3s ease-in-out';
+                    slide_counter++;
+                    carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
+                })
+                prevBtn.addEventListener('click', () =>{
+                    if(slide_counter <= 0) return;
+                    carouselSlide.style.transition = 'transform 0.4s ease-in-out';
+                    slide_counter--;
+                    carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
+                })
+
+                
+               carouselSlide.addEventListener('transitionend', ()=>{
+                    if(imgs_in_carousel[slide_counter].id === 'lastClone'){
+                        carouselSlide.style.transition = 'none';
+                        slide_counter = imgs_in_carousel.length -2;
+                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
+                    }       
+                    if(imgs_in_carousel[slide_counter].id === 'firstClone'){
+                        carouselSlide.style.transition = 'none';
+                        slide_counter = imgs_in_carousel.length - slide_counter;
+                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
+                    }       
+                })
+
+
+                let booking_price_id = document.getElementById("booking_price")
+                function getPrice(time){
+                    booking_price_id.innerHTML = ""
+                    if( time === "am"){
+                        let price = document.createTextNode("新台幣 2000元")
+                        booking_price_id.append(price)
+                    }else if(time === "pm"){                        
+                        let price = document.createTextNode("新台幣 2500元")
+                        booking_price_id.append(price)
+                    }
+                }
+                
+
+ 
+
+            </script>
+            
+        </body>
+
+    </html>
+
