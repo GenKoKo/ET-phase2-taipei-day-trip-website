@@ -8,13 +8,12 @@
 .container {
     display: grid;
     justify-items: center;
-    
     width: 100vw;
 }
 
 .nav{
     display:grid;
-    width:100%;
+    width:100vw;
     height: 54px;
     background: #FFFFFF;    
     position:fixed;
@@ -29,7 +28,6 @@
     grid-template-columns: auto auto 20%;
     background:#FFFFFF;
     /* border:#333 1px solid; */
-    
 }
 
 .nav-content > div {
@@ -78,12 +76,13 @@
     display: grid;
     justify-self: center;
     justify-items: center;
-    grid-template-areas:
+    /* grid-template-areas:
     "section"
     "line"
     "infors"
     "footer"
-    ;
+    ; */
+    grid-template-rows: auto auto;
     margin-top: 94px; 
     width: 1200px;
     
@@ -248,12 +247,6 @@
     padding-bottom:5px;
 }
 
-input[type="data"]{
-    padding-left: 10px;
-    padding-right: 34px;
-    padding-top: 5px;
-    padding-bottom:5px;
-}
 
 
 .radio{
@@ -359,7 +352,6 @@ input[type="data"]{
     margin-top:40px;
     padding-top: 50px;
     
-
 }
 
 .infors > div {
@@ -395,16 +387,21 @@ input[type="data"]{
 
 
 .footer {
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* flex-direction: column; */
+    display:grid;
     align-items: center;
+    justify-items: center;
     
     margin-top:120px;
-    width: minmax(1200px, 100vw);
-    height: 104px;
-    padding: 40px 843px;
+    width: 100vw;
+    /* minmax(1200px, 100vw); */
+    min-height: 104px;
+    /* padding: 40px auto; */
     
     background: #757575;
+
+
 }
 
 .footer > div {
@@ -417,9 +414,6 @@ input[type="data"]{
     font-size: 16px;
     line-height: 13px;
 
-    display: flex;
-    justify-self: center;
-    align-self: center;
     color: #FFFFFF;
 }
 
@@ -427,6 +421,10 @@ input[type="data"]{
 
 
 @media screen and (max-width: 600px){
+    .container {
+        width: 360px;
+    }
+    
     .nav-content {
         width: 360px;
         grid-template-columns: auto 0 auto;
@@ -603,35 +601,3 @@ input[type="data"]{
     }
 }
 
-@media screen and (min-width: 600px) and (max-width: 1200px) {
-    .nav-content {
-        max-width: 1200px;
-        grid-template-columns: auto 0 auto;
-    }
-
-
-    #main {
-        max-width: 1200px;
-    }
-    
-    .section{
-        display: grid;
-        justify-items: center;
-        height:auto;
-    
-    }
-
-
-
-    .infors{
-        display:grid;
-        max-width: 1200px;
-    }
-    
-
-
-    .footer {
-        max-width: 1200px;
-    }
-
-}

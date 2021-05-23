@@ -4,6 +4,135 @@
     box-sizing: border-box;
 }
 
+.modal_bg{
+    position:fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.25);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition:visibility 0s, opacity 0.5s;
+}
+
+.bg_popup{
+    visibility:visible;
+    opacity: 1;
+    
+}
+
+
+.modal{
+    /* vertical-align: 80px; */
+    background-color: #FFFFFF;
+    width: 340px;
+    height: 275px;  
+    display: flex;
+    /* justify-content: center; */
+    justify-items: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    border-radius: 6px;
+    
+}
+
+.modal .deco_bar{
+    position: absolute;
+    width: 340px;
+    height: 10px;
+    left: 0px;
+    top: 0px;
+    
+    /* Dark | Cyan Gradient (0deg) */
+    
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+}
+
+.modal .popup_close{
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 17px;
+    top: 27px;
+    background-image: url('/icon_close.png');
+    background-size: 16px 16px;
+    cursor: pointer;
+}
+
+.title_login {
+    width: 310px;
+    height: 27px;    
+    font-family: Noto Sans TC;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 24px;    
+    display: flex;
+    align-items: center;
+    text-align: center;    
+    color: #666666;
+    margin-bottom: 15px;
+    margin-top: 25px;
+    justify-content:center;
+    
+}
+
+.modal input{
+    width: 310px;
+    height: 47px;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 15px;
+    display: flex;
+    /* justify-items:center; */
+    margin-bottom: 10px;
+}
+
+.modal button{
+    width: 310px;
+    height: 47px;
+    background: #448899;
+    border-radius: 5px;
+    justify-content: center;
+
+    font-family: Noto Sans TC;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 19px;
+    line-height: 16px;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+}
+
+.popup_question{
+    display: inline-flex;
+    justify-content:center;
+    width: 310px;
+    height: 22px;
+    
+    font-family: Noto Sans TC;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 13px;
+    /* or 83% */
+    
+    display: flex;
+    align-items: center;
+    text-align: center;
+    
+    /* Gray 800 */
+    
+    color: #666666;
+}
+
+
 #taipei > a {
     text-decoration: none;
     color: #448899; 
@@ -49,7 +178,7 @@
     color: #448899; 
 }
 
-.button {
+.nav_button {
     display: grid;
     /* justify-items: end; */
     justify-self: end;
@@ -68,6 +197,7 @@
     order: 0;
     flex-grow: 0;
     margin: 10px 0px;
+    cursor: pointer;
     
 }
 
@@ -285,14 +415,15 @@
 }
 
 .footer {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     align-items: center;
+    justify-items: center;
     
     margin-top:55px;
-    width: 1920px;
-    height: 104px;
-    padding: 40px 843px;
+    width: 100vw;
+    min-height: 104px;
+    /* height: 104px; */
+    /* padding: 40px 843px; */
     
     background: #757575;
 }
@@ -307,8 +438,6 @@
     font-size: 16px;
     line-height: 13px;
 
-    display: flex;
-    align-items: center;
     color: #FFFFFF;
 }
 
@@ -465,7 +594,21 @@
 }
 
 
-@media screen and (min-width: 600px) and (max-width: 1200px){
-
+@media screen and (min-width: 600px) and (max-width: 1919px){
+    .hero {
+        display:grid;
+        width: 100vw;
+        height: 320px;
+        margin-top: 54px;
+    
+        /* background的項目順序必須為前圖片，後顏色 */ 
+        background:  
+        url('/welcome1.png')  no-repeat,
+        linear-gradient(135deg, #AADDEE 0%, #66AABB 100%) repeat;
+    
+        background-position: 95% bottom, left; 
+        background-size: 650px 320px, cover; 
+    
+    }
 
 }
