@@ -16,6 +16,7 @@ app = Flask(__name__,
         )
 
 
+#MySQL 設定
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.secret_key = os.getenv('secret_key')
@@ -23,9 +24,9 @@ app.config["MYSQL_HOST"] = os.getenv('MYSQL_HOST')
 app.config["MYSQL_USER"] = os.getenv('MYSQL_USER')
 app.config["MYSQL_PASSWORD"] = os.getenv('MYSQL_PASSWORD')
 app.config["MYSQL_DB"] = os.getenv('MYSQL_DB')
-
 mysql = MySQL(app)
 
+#API content encoder
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, bytes):
@@ -52,11 +53,12 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
-
+#route 測試
 @app.route("/test")
 def test():
 	return "it is a test"
 
+#API 旅遊景點
 @app.route("/api/attractions", methods=["GET","POST"])
 def api_attractions():
 	
@@ -103,7 +105,6 @@ def api_attractions():
 		dict = {'error': True, 'message': "it is 500 ERROR~伺服器內部錯誤"}
 		return Response(response=json.dumps(dict, indent = 4),status=500)
 
-
 @app.route("/api/attraction/<attractionId>")
 def api_attractionIDL(attractionId):
 	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -130,8 +131,106 @@ def api_attractionIDL(attractionId):
 		return Response(response=json.dumps(dict, indent = 4),status=500)
 
 
+#API 使用者
+@app.route("/api/user", methods=["GET", "POST","PATCH","DELETE"])
+def api_user():
+	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	# cur.execute("DROP TABLE IF EXISTS membership")
+	cur.execute("CREATE TABLE IF NOT EXISTS membership  (id bigint NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, email varchar(50) NOT NULL, password varchar(20) NOT NULL, PRIMARY KEY(id))")
+	mysql_command_register = "INSERT INTO membership (name, email, password) VALUES (%s, %s, %s)"
+	# val = (1, 'test', 't@t.com', 'test')
+	# cur.execute(sql_command, val)
+	# mysql.connection.commit()
+
+	# cur.execute("select * from membership")
+	# test = cur.fetchone()
+	# print(test)
+
+	if request.method == "GET":
+		email = session.get('email')
+		cur.execute("SELECT * FROM membership WHERE email = %s", [email])
+		result = cur.fetchone()
+		id = result['id']
+		name = result['name']
+
+		if email :
+			dict = { "data": {"id": id, "name": name, "email": email}}
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+		else:
+			return None
+
+	elif request.method == "POST":
+		name = request.get_json()['name']
+		email = request.get_json()['email']
+		password = request.get_json()['password']
+		cur.execute("SELECT * from membership WHERE email = %s",[email])
+		result = cur.fetchone()
+
+		if not result:
+			val = (name, email, password)
+			cur.execute(mysql_command_register, val)
+			mysql.connection.commit()
+			dict = { "ok": True }
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+		elif result:
+			dict = { "error": True, "message": "該Email已被註冊" }
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=400)
+		else:
+			dict = {'error': True, 'message': "it is 500 ERROR~伺服器內部錯誤"}
+			print(dict)
+			return Response(response=json.dumps(dict, indent = 4),status=500)
+
+	elif request.method == "PATCH":
+		email = request.get_json()['email']
+		password = request.get_json()['password']
+		print(password)
+		cur.execute("SELECT * FROM membership WHERE email = %s and password = %s", (email,password))
+		result = cur.fetchone()
+
+		if result:
+			dict = {"ok": True}
+			session['email'] = email
+			session['password'] = password
+			print(dict)
+			redirect(url_for('index'))
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+		elif not result:
+			# cur.execute("SELECT * FROM membership WHERE email = %s",email)
+			# result_email = cur.fetchone()
+			# if result_email:
+			# 	dict = {"error": True,"message": "Email已被註冊"}
+			# else:
+			dict = {"error": True,"message": "Email或密碼錯誤"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=400)
+		else:
+			dict = {'error': True, 'message': "it is 500 ERROR~伺服器內部錯誤"}
+			print(dict)
+			return Response(response=json.dumps(dict, indent = 4),status=500)
+
+	elif request.method == "DELETE":
+		session.clear()
+		print(session)
+		dict = {"ok": True}
+		redirect(url_for('index'))
+		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+
+#API 預定行程
+@app.route("/api/booking", methods= ["GET", "POST", "DELETE"])
+def api_booking():
+	if request.method == "GET":
+		return Response
+
+	elif request.method == "POST":
+		return Response
+
+	elif request.method == "DELETE":
+		return Response
 
 
+#啟動網站
 if __name__ == "__main__":
 	if platform.system().lower() == "linux":
 		print("SYSTEM is " + platform.system().lower())

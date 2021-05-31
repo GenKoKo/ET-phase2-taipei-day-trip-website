@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8"></meta>
+            <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
+            <title>One Day in Taipei GO!</title>
+            <link rel="stylesheet" href="/css/main.css" type="text/css">
+            <link rel="shortcut icon" href="#"/>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <!-- <script type=module src='/js/header_footer.js'></script> -->
+            <script type="text/javascript" src='/js/login_register.js'></script>
+            <script type="text/javascript" src='/js/booking.js'></script>
+        </head>
+        
+        <body onload="detect_login_status();">
+            <div class="container">
+                <div class="nav">
+                    <div class="nav-content">
+                        <div id="taipei"> <a href='/'>台北一日遊</a> </div>
+                        <div class="blank"></div>
+                        <div class="nav_button">
+                            <div id="booking">預定行程</div> 
+                            <div id="login">登出系統</div> 
+                            <div id="logout">登入/註冊</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                <div class="footer">
+                    <div>COPYRIGHT © 2021 台北一日遊</div>
+                </div>
+
+            </div>
+            
+            <!-- 登入popup-->
+            <div class="modal_bg">
+                <div class="modal">
+                    <div class="deco_bar"></div>
+                    <div class="popup_close"></div>
+                    <div class="title_popup">登入會員帳號</div>
+                    <form name='login'>
+                        <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                        <input type="password" name="password" placeholder="輸入密碼" required/>
+                        <button onclick="user_login()" type="button"> 登入帳戶 </button>
+                    </form>
+                    <div class="messsage">
+                        <div class="success_message"></div>
+                        <div class="error_message"></div>
+                    </div>
+                    
+                    <div class="popup_question">還沒有帳戶？<div class="toRegister">點此註冊</div></div>
+                </div>
+            </div>
+            
+            <!-- 註冊popup  -->
+            <div class="modal_bg_register">
+                <div class="modal_register">
+                    <div class="deco_bar"></div>
+                    <div class="popup_close"></div>
+                    <div class="title_popup">註冊會員帳號</div>
+                    <form name="register" method="POST">
+                        <input type="name" name="name" placeholder="輸入姓名" required/>
+                        <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                        <input type="password" name="password" placeholder="輸入密碼" required/>
+                        <button onclick="user_register()" type="button"> 註冊新帳戶 </button>
+                    </form>
+                    <div class="messsage">
+                        <div class="success_message"></div>
+                        <div class="error_message"></div>
+                    </div>
+                    <div class="popup_question">已經有帳戶了？<div class="toLogin">點此登入</div></div>
+                </div>
+            </div>            
+        
+
+    
+        </body>
+    </html>
