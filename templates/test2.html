@@ -61,5 +61,14 @@
                 <div class="box box4">box 4</div>
 
             </div>
+            <script type="text/javascript">
+                import axios from 'axios';
+                // const axios = require('axios');
+                const {data} = axios.get('https://dummyapi.io/data/api/user?limit=10')
+                const users = data; 
+                console.log("🚀 ~ file: test2.html ~ line 69 ~ users", users)
+                
+            </script>
+
         </body>
     </html>

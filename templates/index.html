@@ -4,20 +4,22 @@
             <meta charset="utf-8"></meta>
             <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
             <title>One Day in Taipei GO!</title>
-            <link rel="stylesheet" href="index.css" type="text/css">
+            <link rel="stylesheet" href="/css/main.css" type="text/css">
             <link rel="shortcut icon" href="#"/>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <!-- <script type=module src='/js/header_footer.js'></script> -->
         </head>
 
-        <body onload="processor();">
+        <body onload="processor(); detect_login_status();">
             <div class="container">
-
                 <div class="nav">
                     <div class="nav-content">
                         <div id="taipei"> <a href='/'>台北一日遊</a> </div>
                         <div class="blank"></div>
                         <div class="nav_button">
                             <div id="booking">預定行程</div> 
-                            <div id="login">登入/註冊</div> 
+                            <div id="login"></div> 
+                            <div id="logout"></div>
                         </div>
                     </div>
                 </div>
@@ -38,269 +40,58 @@
                    <div id="error"></div>
                 </div>
 
-                
+                <!-- <my-footer></my-footer> -->
                 <div class="footer">
                     <div>COPYRIGHT © 2021 台北一日遊</div>
                 </div>
 
-
+                <!-- 登入popup-->
                 <div class="modal_bg">
                     <div class="modal">
                         <div class="deco_bar"></div>
                         <div class="popup_close"></div>
-                        <div class="title_login">登入會員帳號</div>
-                        <form>
-                            <input type="email" name="email" placeholder="輸入電子信箱">
-                            <input type="password" name="password" placeholder="輸入密碼">
-                            <button> 登入帳戶 </button>
+                        <div class="title_popup">登入會員帳號</div>
+                        <form name='login'>
+                            <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                            <input type="password" name="password" placeholder="輸入密碼" required/>
+                            <button onclick="user_login()" type="button"> 登入帳戶 </button>
                         </form>
+                        <div class="messsage">
+                            <div class="success_message"></div>
+                            <div class="error_message"></div>
+                        </div>
+                        
                         <div class="popup_question">還沒有帳戶？<div class="toRegister">點此註冊</div></div>
                     </div>
                 </div>
-
-                <!-- <div class="modal_bg_register">
+                
+                <!-- 註冊popup  -->
+                <div class="modal_bg_register">
                     <div class="modal_register">
                         <div class="deco_bar"></div>
                         <div class="popup_close"></div>
-                        <div class="title_login">註冊會員帳號</div>
-                        <form>
-                            <input type="name" name="name" placeholder="輸入姓名">
-                            <input type="email" name="email" placeholder="輸入電子信箱">
-                            <input type="password" name="password" placeholder="輸入密碼">
-                            <button> 註冊新帳戶 </button>
+                        <div class="title_popup">註冊會員帳號</div>
+                        <form name="register" method="POST">
+                            <input type="name" name="name" placeholder="輸入姓名" required/>
+                            <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                            <input type="password" name="password" placeholder="輸入密碼" required/>
+                            <button onclick="user_register()" type="button"> 註冊新帳戶 </button>
                         </form>
+                        <div class="messsage">
+                            <div class="success_message"></div>
+                            <div class="error_message"></div>
+                        </div>
                         <div class="popup_question">已經有帳戶了？<div class="toLogin">點此登入</div></div>
                     </div>
-                </div> -->
+                </div>
 
 
                 
             </div>
             
-            <script type="text/javascript">
-                let localHost = "http://127.0.0.1:3000/" // for develop
-                let EC2Host = "http://54.168.152.131:3000/" //for deploy
-                let api_url_default = EC2Host+"api/attractions?";
-                
-                let spots = document.getElementById("spots");
-                let next_page_now = 0;
-                
-                let detector_throttle = throttle(500,500)
-                window.addEventListener("scroll", detector_throttle)
+            <script type="text/javascript" src='/js/login_register.js'></script>
+            <script type="text/javascript" src='/js/index.js'>
 
-                let login_button = document.querySelector('#login')
-                let modal_bg = document.querySelector('.modal_bg')
-
-                login_button.addEventListener('click', ()=>{
-                    console.log('clicked')
-                    modal_bg.classList.toggle('bg_popup')
-                })
-
-                let popup_close = document.querySelector('.popup_close')
-                popup_close.addEventListener('click', ()=>{
-                    console.log('close');
-                    modal_bg.classList.toggle('bg_popup')
-                })
-                
-                // 未完成 enter search
-                // let search_keyword_id = document.getElementById('search_keyword_id')
-                // search_keyword_id.addEventListener('keyup', function(event) {
-                //         if (event.keyCode === 13) {
-                //                 let form = document.forms['form_input'];
-                //         console.log("🚀 ~ file: index.html ~ line 63 ~ search_keyword_id.addEventListener ~ form", form)
-                //         let search_keyword = form.elements.search_keyword.value;
-                //         console.log("🚀 ~ file: index.html ~ line 65 ~ search_keyword_id.addEventListener ~ search_keyword", search_keyword)
-                //         processKeyword = search_keyword
-                
-                //         processor(0,search_keyword)
-                //     }
-                // })
-                
-                let processKeyword=""; //若沒有設定此變數 在搜尋時load第2頁開始會出現偏離
-                let next_page, search_keyword, next_page_before;
-                function processSearch(){
-
-                    document.getElementById("spots").innerHTML = "";
-                    document.getElementById("error").innerHTML = "";
-                    next_page_now = 0;
-                    next_page_before = null;
-                    let form = document.forms['form_input'];
-                    let search_keyword = form.elements.search_keyword.value;
-                    processKeyword = search_keyword
-                    processor(next_page_now, processKeyword);
-                }
-
-                // 未完成 enter search
-                // function detectEnterKeyword(e){
-                //     console.log(e.value);
-                //     if (event.keyCode == 13 ){
-                //         console.log('entered')
-                //         processor(0, e.value)
-                //     }
-                // }
-
-                function throttle( delay,mustRunDelay ){
-                    let startTime, timestamp , timer;
-                    return function(){
-                        timestamp = +new Date();
-                        clearTimeout(timer)
-                        if (!startTime){
-                            startTime = timestamp
-                        }
-                        if (timestamp - startTime >= mustRunDelay){
-                            detector()
-                            startTime = timestamp;
-                        }else{
-                            timer = setTimeout(function(){detector()},delay)
-                        }
-                    }
-                }
-                
-                function detector(){
-                    let triggerDistance = 500;
-                    let distance = spots.getBoundingClientRect().bottom - window.innerHeight;
-                    if ( distance < triggerDistance ) { 
-                        processor(next_page_now, processKeyword);
-                    }
-                    
-                }
-                
-                
-                function processor(next_page=0,search_keyword="") {
-                    // 判斷是否有重覆load同頁面
-                    if (next_page_before !== next_page_now){
-                        let page = "page="+next_page_now
-                        let keyword = "&keyword="+search_keyword
-                        let url = api_url_default+page+keyword
-                        loader(url)
-                        next_page_before = next_page_now;
-                    }
-                }
-                
-                
-                
-                function loader(api){
-                    
-                    fetch(api).then( (response) => {
-                        return response.json();
-                        }).then( (result) => {
-
-                            if(result['error']){
-                                let error = document.getElementById('error');
-                                let error_infro = document.createTextNode('抱歉，查無結果。');
-                                error.appendChild(error_infro);
-                            }
-
-                            for(let i = 0; i < 12; i++){
-                            let proto_name = result["data"][i]["name"];
-                            let proto_image = result["data"][i]["images"][0]
-                            let proto_mrt = result["data"][i]["mrt"];
-                            let proto_category = result["data"][i]["category"];
-                            let proto_id = result["data"][i]["id"];
-                            
-                            let link_a = document.createElement("a");
-                            link_a.href = "/attraction/" + proto_id;
-
-                            let picture_div = document.createElement("div");
-                            picture_div.className = "picture";
-                            
-                            let spot_image_img = document.createElement("img");
-                            spot_image_img.className = "spot_image"
-                            spot_image_img.src = proto_image;
-                            link_a.appendChild(spot_image_img)
-
-                            picture_div.appendChild(link_a);
-
-                            let spot_name_div = document.createElement("div");
-                            spot_name_div.className = "spot_name"
-                            picture_div.appendChild(spot_name_div);
-                            
-                            let spot_name = document.createTextNode(proto_name);
-                            spot_name_div.appendChild(spot_name);
-
-                            let detail_div = document.createElement("div");
-                            detail_div.className = "detail";
-                
-                            let mrt_div = document.createElement("div");
-                            mrt_div.className = "mrt";
-                            detail_div.appendChild(mrt_div);
-
-                            let mrt = document.createTextNode(proto_mrt);
-                            mrt_div.appendChild(mrt);
-
-                            let category_div = document.createElement("div");
-                            category_div.className = "category";
-                            detail_div.appendChild(category_div);
-
-                            let category = document.createTextNode(proto_category);
-                            category_div.appendChild(category);
-
-                            let spot_div = document.createElement("div");
-                            spot_div.className = "spot"
-
-                            
-                            spot_div.appendChild(picture_div);
-                            spot_div.appendChild(detail_div);
-                            
-                            spots.appendChild(spot_div);
-                            }
-
-                            next_page_now = result["nextPage"]
-
-                        }
-                        )
-                    
-                }
-                    
-                    
-                
-                // MVC model
-                // let models = {getData:function(api){
-                //     data = null;
-                //     fetch(api).then( (response) => {return response.json();}).then( (result) => {this.data = result}).then(() => {return this.data});
-                //     }};
-
-                // let views = {renderData:function(data){
-                //     for(let i = 0; i < 12; i++){
-                //         let spot_name = data["data"][i]["name"];
-                //         let spot_image = "http://" + models.data["data"][i]["images"].split("http://")[1]
-                //         let mrt = data["data"][i]["mrt"];
-                //         let type = data["data"][i]["category"];
-                        
-                //         let picture_div = document.createElement("div");
-                //         picture_div.className = "picture";
-                        
-                //         let spot_image_img = document.createElement("img");
-                //         spot_image_img.src = spot_image;
-                //         picture_div.appendChild(spot_image_img);
-
-                //         let spot_name_div = document.createElement("div");
-                //         spot_name_div.className = "spot_name"
-                //         picture_div.appendChild(spot_name_div);
-
-                //         let detail_div = document.createElement("div");
-                //         detail_div.className = "detail";
-            
-                //         let mrt_div = document.createElement("div");
-                //         mrt_div.className = "mrt";
-                //         detail_div.appendChild(mrt_div);
-
-                //         let category_div = document.createElement("div");
-                //         category_div.className = "category";
-                //         detail_div.appendChild(category_div);
-
-                //         sopts.appendChild(picture_div);
-                //         spots.appendChild(detail_div);
-
-
-                //         }
-                //     }};
-
-
-                // let controllers = {init:function(){
-                //     models.getData(api_url_default).then((data)=>{ views.renderData(data);})
-                //     // spots.appendChild("lorem")
-                //     }};
 
 
             </script>

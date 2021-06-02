@@ -4,25 +4,28 @@
             <meta charset="utf-8"></meta>
             <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1"/>
             <title>One Day in Taipei GO!</title>
-            <link rel="stylesheet" href="../attraction.css" type="text/css">
+            <link rel="stylesheet" href="/css/attraction.css" type="text/css">
+            <link rel="stylesheet" href="/css/main.css" type="text/css">
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <link rel="shortcut icon" href="#"/>
         </head>
         
-        <body onload='processor();'>
+        <body onload='processor(); detect_login_status();'>
             <div class="container">
                 <div class="nav">
                     <div class="nav-content">
                         <div id="taipei"><a href='/'>台北一日遊</a> </div>
                         <div class="blank"></div>
-                        <div class="button">
+                        <div class="nav_button">
                             <div id="booking">預定行程</div> 
-                            <div id="login">登入/註冊</div> 
+                            <div id="login"></div> 
+                            <div id="logout"></div>
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="main">
-
+                    
                     <div class="section">
                         <div class="picture_current_container">
                             <img src="/arrow-left.png" id='prevBtn'></i>
@@ -45,19 +48,19 @@
                                         <p style="margin-right: 10px;">選擇時間：</p>
                                         <label for="radio_am" class="radio">
                                             <input type="radio" name="time" id="radio_am" value="am"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div><p style="margin-right:18px">上半天</p>
-                                        
-                                        <label for="radio_pm" class="radio">
-                                            <input type="radio" name="time" id="radio_pm" value="pm"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div> 下半天
-                                        </label>
-                                    </div>
-                                    <div class="detail_title">
-                                        <p style="margin-right:5px">導覽費用：</p>
-                                        <div class="detail_description" id="booking_price">新台幣 ____ 元</div>
+                                            
+                                            <label for="radio_pm" class="radio">
+                                                <input type="radio" name="time" id="radio_pm" value="pm"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div> 下半天
+                                            </label>
+                                        </div>
+                                        <div class="detail_title">
+                                            <p style="margin-right:5px">導覽費用：</p>
+                                            <div class="detail_description" id="booking_price">新台幣 ____ 元</div>
                                     </div>
                                     <button type="button" class="start_booking"> <p>開始預訂行程</p> </button>
                                 </div>
                             </div>
-
+                            
                         </div>
                     </div>
                     
@@ -82,133 +85,52 @@
                 
             </div>
             
-            <script type="text/javascript">
-                const localHost = "http://127.0.0.1:3000/" // for develop
-                const EC2Host = "http://54.168.152.131:3000/" //for deploy
-                let api_url_spot_id = EC2Host+"api/attraction/";
-
-                let id = null;
-                function processor(){
-                    let pathname = window.location.pathname
-                    let id = pathname.replace('/attraction/','')
-                    console.log("🚀 ~ file: attraction.html ~ line 48 ~ getID ~ id", id)
-
-                    loader(id);
-                }
-
-                let img_counter = 0;
-                let imgs_in_carousel;
-                let image_width;
-                function loader(id){
-                    let api_target_spot = api_url_spot_id + id
-                    fetch(api_target_spot).then( (res) => {return res.json();}).then( (result) =>{
-                        let api_init = result['data']
-                        let name = api_init['name']
-                        let address = api_init['address']
-                        let category = api_init['category']
-                        let description = api_init['description']
-                        let images = api_init['images']
-                        let mrt = api_init['mrt']
-                        let transport = api_init['transport']  
-
-                        let name_id = document.getElementById('name')
-                        name_id.append(name)
-
-                        let address_id = document.getElementById('address')
-                        address_id.append(address)
-                        
-                        let description_id = document.getElementById('description')
-                        description_id.append(description)
-                        
-                        
-                        let tranport_id = document.getElementById('transport')
-                        tranport_id.append(transport)
-                        
-                        let location_id = document.getElementById('location')
-                        location_id.append(category+" at "+mrt)
-                        
-                        let carousel_slide_id = document.getElementById('carousel_slide')
-                        
-                        
-                        let image_last = document.createElement('img')
-                        image_last.className = 'image'
-                        image_last.id = 'lastClone'
-                        image_last.src = images[images.length-1]
-                        carousel_slide_id.appendChild(image_last)                        
-                        
-                        while(images[img_counter]){
-                            let image = document.createElement('img')
-                            image.className = 'image'
-                            image.src = images[img_counter]
-                            carousel_slide_id.appendChild(image)
-                            img_counter++
-                            
-                        }
-
-                        let image_first = document.createElement('img')
-                        image_first.className = 'image'
-                        image_first.id = 'firstClone'
-                        image_first.src = images[0]
-                        carousel_slide_id.appendChild(image_first)  
-
-
-                        imgs_in_carousel = document.querySelectorAll("#carousel_slide img") 
-                        image_width = imgs_in_carousel[0].width
-                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
-                    })
-                }
-                
-                
-                const carouselSlide = document.querySelector('#carousel_slide')
-                
-                const prevBtn = document.querySelector('#prevBtn')
-                const nextBtn = document.querySelector('#nextBtn')
-                let slide_counter = 1;
-                nextBtn.addEventListener('click', () =>{
-                    console.log("🚀 ~ file: attraction.html ~ line 154 ~ fetch ~ image_width", image_width)
-                    if(slide_counter >= imgs_in_carousel.length-1) return;
-                    carouselSlide.style.transition = 'transform 0.3s ease-in-out';
-                    slide_counter++;
-                    carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
-                })
-                prevBtn.addEventListener('click', () =>{
-                    if(slide_counter <= 0) return;
-                    carouselSlide.style.transition = 'transform 0.4s ease-in-out';
-                    slide_counter--;
-                    carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
-                })
-
-                
-               carouselSlide.addEventListener('transitionend', ()=>{
-                    if(imgs_in_carousel[slide_counter].id === 'lastClone'){
-                        carouselSlide.style.transition = 'none';
-                        slide_counter = imgs_in_carousel.length -2;
-                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
-                    }       
-                    if(imgs_in_carousel[slide_counter].id === 'firstClone'){
-                        carouselSlide.style.transition = 'none';
-                        slide_counter = imgs_in_carousel.length - slide_counter;
-                        carouselSlide.style.transform = 'translateX(' + (-image_width * slide_counter) + 'px)';
-                    }       
-                })
-
-
-                let booking_price_id = document.getElementById("booking_price")
-                function getPrice(time){
-                    booking_price_id.innerHTML = ""
-                    if( time === "am"){
-                        let price = document.createTextNode("新台幣 2000元")
-                        booking_price_id.append(price)
-                    }else if(time === "pm"){                        
-                        let price = document.createTextNode("新台幣 2500元")
-                        booking_price_id.append(price)
-                    }
-                }
-                
-
- 
-
-            </script>
+            
+            <!-- 登入popup-->
+            <div class="modal_bg">
+                <div class="modal">
+                    <div class="deco_bar"></div>
+                    <div class="popup_close"></div>
+                    <div class="title_popup">登入會員帳號</div>
+                    <form name='login'>
+                        <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                        <input type="password" name="password" placeholder="輸入密碼" required/>
+                        <button onclick="user_login()" type="button"> 登入帳戶 </button>
+                    </form>
+                    <div class="messsage">
+                        <div class="success_message"></div>
+                        <div class="error_message"></div>
+                    </div>
+                    
+                    <div class="popup_question">還沒有帳戶？<div class="toRegister">點此註冊</div></div>
+                </div>
+            </div>
+            
+            <!-- 註冊popup  -->
+            <div class="modal_bg_register">
+                <div class="modal_register">
+                    <div class="deco_bar"></div>
+                    <div class="popup_close"></div>
+                    <div class="title_popup">註冊會員帳號</div>
+                    <form name="register" method="POST">
+                        <input type="name" name="name" placeholder="輸入姓名" required/>
+                        <input type="email" name="email" placeholder="輸入電子信箱" required/>
+                        <input type="password" name="password" placeholder="輸入密碼" required/>
+                        <button onclick="user_register()" type="button"> 註冊新帳戶 </button>
+                    </form>
+                    <div class="messsage">
+                        <div class="success_message"></div>
+                        <div class="error_message"></div>
+                    </div>
+                    <div class="popup_question">已經有帳戶了？<div class="toLogin">點此登入</div></div>
+                </div>
+            </div>
+            
+            
+            
+            
+            <script type="text/javascript" src='/js/login_register.js'></script>
+            <script type="text/javascript" src='/js/attraction.js'></script>
             
         </body>
 

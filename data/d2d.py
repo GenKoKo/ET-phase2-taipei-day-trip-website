@@ -65,6 +65,14 @@ try:
             cursor.execute(command, (spot['_id'],spot['stitle'],spot['CAT2'], spot['xbody'], spot['address'], spot['info'], spot['MRT'], Decimal(spot['latitude'].strip('"')), Decimal(spot['longitude'].strip('"')), url_list_string))
             conn.commit()   
         
+        
+
+        # sql_command = "INSERT INTO membership (id, name, email, password) VALUES (%s, %s, %s, %s)"
+        # val = (1, 'test', 't@test.com', 'test')
+
+        # cursor.execute(sql_command, val)
+
+
     print("Success")
 
 

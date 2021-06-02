@@ -1,76 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-.container {
-    display: grid;
-    justify-items: center;
-    width: 100vw;
-}
 
 .nav{
-    display:grid;
-    width:100vw;
-    height: 54px;
-    background: #FFFFFF;    
-    position:fixed;
+
     border-bottom: 1px solid #E8E8E8;
     z-index: 10;
 }
 
-.nav-content {
-    display: grid;
-    width: 1200px;
-    justify-self: center;
-    grid-template-columns: auto auto 20%;
-    background:#FFFFFF;
-    /* border:#333 1px solid; */
-}
 
-.nav-content > div {
-    align-self: center;
-}
-
-
-
-#taipei{
-    font-family: Noto Sans;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 30px;
-    line-height: 34px;
-    color: #448899; 
-}
-
-#taipei > a {
-    text-decoration: none;
-    color: #448899; 
-}
-
-.button {
-    display: grid;
-    /* justify-items: end; */
-    justify-self: end;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 20px;
-
-    font-family: Noto Sans TC;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 13px;
-
-    color: #666666;
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 10px 0px;
-    
-}
 
 #main {
     display: grid;
@@ -404,35 +339,16 @@
 
 }
 
-.footer > div {
-    width: 240px;
-    height: 14px;
-    
-    font-family: Noto Sans TC;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 13px;
-
-    color: #FFFFFF;
-}
 
 
 
+@media screen and (max-width: 600px){    
 
-@media screen and (max-width: 600px){
-    .container {
-        width: 360px;
-    }
-    
-    .nav-content {
-        width: 360px;
-        grid-template-columns: auto 0 auto;
-    }
 
 
     #main {
         width:360px;
+        justify-content: center;
     }
     
     .section{
@@ -562,42 +478,6 @@
         width: 330px;
     }
     
-    
-    
-    .footer {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        
-        margin-top:120px;
-        width: minmax(1200px, 100vw);
-        height: 104px;
-        padding: 40px 843px;
-        
-        background: #757575;
-    }
-    
-    .footer > div {
-        width: 240px;
-        height: 14px;
-        
-        font-family: Noto Sans TC;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 13px;
-    
-        display: flex;
-        justify-self: center;
-        align-self: center;
-        color: #FFFFFF;
-    }
 
-
-
-    .footer {
-        padding: 40px 0px;
-        width: 360px;
-    }
 }
 
