@@ -17,7 +17,7 @@
                         <div id="taipei"><a href='/'>台北一日遊</a> </div>
                         <div class="blank"></div>
                         <div class="nav_button">
-                            <div id="booking">預定行程</div> 
+                            <div id="booking" onclick="to_booking_page();">預定行程</div> 
                             <div id="login"></div> 
                             <div id="logout"></div>
                         </div>
@@ -37,28 +37,28 @@
                             <div id="name"></div>
                             <div id="location"></div>
                             <div class="booking_detail_container">
-                                <div class="booking_detail">
+                                <form class="booking_detail" id='booking_detail'>
                                     <div class="detail_title">訂購導覽行程</div>
                                     <div class="detail_description"> <p>以此景點為中心的一日行程，帶您探索城市角落故事</p></div>
                                     <div class="detail_title">
                                         <p style="margin-right: 5px;">選擇日期：</p>
-                                        <input id="date" type="date" >
+                                        <input id="date" name = "date" type="date" required/>
                                     </div>
                                     <div class="detail_title">
                                         <p style="margin-right: 10px;">選擇時間：</p>
                                         <label for="radio_am" class="radio">
-                                            <input type="radio" name="time" id="radio_am" value="am"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div><p style="margin-right:18px">上半天</p>
-                                            
-                                            <label for="radio_pm" class="radio">
-                                                <input type="radio" name="time" id="radio_pm" value="pm"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div> 下半天
-                                            </label>
-                                        </div>
-                                        <div class="detail_title">
-                                            <p style="margin-right:5px">導覽費用：</p>
-                                            <div class="detail_description" id="booking_price">新台幣 ____ 元</div>
+                                            <input type="radio" name="time" id="radio_am" value="am"  class ="radio__input" onchange="getPrice(this.value)" required/> <div class="radio__radio" style="margin-right:4px"></div><p style="margin-right:18px">上半天</p>
+                                        </label>
+                                        <label for="radio_pm" class="radio">
+                                            <input type="radio" name="time" id="radio_pm" value="pm"  class ="radio__input" onchange="getPrice(this.value)"> <div class="radio__radio" style="margin-right:4px"></div> <p>下半天</p>
+                                        </label>
                                     </div>
-                                    <button type="button" class="start_booking"> <p>開始預訂行程</p> </button>
-                                </div>
+                                    <div class="detail_title">
+                                            <p style="margin-right:5px">導覽費用：</p>
+                                            <div class="detail_description" id="booking_price">新台幣 _____ 元</div>
+                                    </div>
+                                    <button type="button" class="start_booking" onclick="start_booking();"> <p>開始預訂行程</p> </button>
+                                </form>
                             </div>
                             
                         </div>
@@ -129,7 +129,7 @@
             
             
             
-            <script type="text/javascript" src='/js/login_register.js'></script>
+            <script type="text/javascript" src='/js/main.js'></script>
             <script type="text/javascript" src='/js/attraction.js'></script>
             
         </body>

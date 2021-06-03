@@ -1,6 +1,11 @@
 localHost = "http://127.0.0.1:3000/" // for develop
 EC2Host = "http://54.168.152.131:3000/" //for deploy
-let api_url_spot_id = EC2Host+"api/attraction/";
+
+HostNow = EC2Host;
+
+let api_url_spot_id = HostNow+"api/attraction/";
+
+
 
 let id = null;
 function processor(){
@@ -112,30 +117,13 @@ let booking_price_id = document.getElementById("booking_price")
 function getPrice(time){
     booking_price_id.innerHTML = ""
     if( time === "am"){
-        let price = document.createTextNode("新台幣 2000元")
+        let price = document.createTextNode("新台幣 2000 元")
         booking_price_id.append(price)
     }else if(time === "pm"){                        
-        let price = document.createTextNode("新台幣 2500元")
+        let price = document.createTextNode("新台幣 2500 元")
         booking_price_id.append(price)
     }
 }
 
 
 
-// function start_booking(){
-    
-
-// }
-
-// function detect_login_status(){
-//     axios({
-//         method: 'GET', 
-//         url: api_url_user,
-//     }).then( (res) => {
-//         status_logout.append('登出系統');
-//         console.log(res)
-//     }).catch( (err) => {
-//         status_login.append('登入/註冊');
-//         console.log(err)
-//     })
-// }

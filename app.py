@@ -58,6 +58,8 @@ def thankyou():
 def test():
 	return "it is a test"
 
+# cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
 #API 旅遊景點
 @app.route("/api/attractions", methods=["GET","POST"])
 def api_attractions():
@@ -138,26 +140,23 @@ def api_user():
 	# cur.execute("DROP TABLE IF EXISTS membership")
 	cur.execute("CREATE TABLE IF NOT EXISTS membership  (id bigint NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, email varchar(50) NOT NULL, password varchar(20) NOT NULL, PRIMARY KEY(id))")
 	mysql_command_register = "INSERT INTO membership (name, email, password) VALUES (%s, %s, %s)"
-	# val = (1, 'test', 't@t.com', 'test')
-	# cur.execute(sql_command, val)
-	# mysql.connection.commit()
 
-	# cur.execute("select * from membership")
-	# test = cur.fetchone()
-	# print(test)
 
 	if request.method == "GET":
+		print(session)
 		email = session.get('email')
 		cur.execute("SELECT * FROM membership WHERE email = %s", [email])
 		result = cur.fetchone()
-		id = result['id']
-		name = result['name']
 
-		if email :
+		if result :
+			id = result['id']
+			name = result['name']
 			dict = { "data": {"id": id, "name": name, "email": email}}
+			print(dict)
 			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
 		else:
-			return None
+			dict = { "error": True, "message": "不明異常" }
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=500)
 
 	elif request.method == "POST":
 		name = request.get_json()['name']
@@ -185,7 +184,6 @@ def api_user():
 	elif request.method == "PATCH":
 		email = request.get_json()['email']
 		password = request.get_json()['password']
-		print(password)
 		cur.execute("SELECT * FROM membership WHERE email = %s and password = %s", (email,password))
 		result = cur.fetchone()
 
@@ -193,6 +191,8 @@ def api_user():
 			dict = {"ok": True}
 			session['email'] = email
 			session['password'] = password
+			session['user_id'] = result['id']
+			session['name'] = result['name']
 			print(dict)
 			redirect(url_for('index'))
 			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
@@ -220,14 +220,100 @@ def api_user():
 #API 預定行程
 @app.route("/api/booking", methods= ["GET", "POST", "DELETE"])
 def api_booking():
+	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	# cur.execute('DROP TABLE booking_data IF EXISTS')
+	cur.execute('CREATE TABLE IF NOT EXISTS booking_data (booking_id bigint NOT NULL AUTO_INCREMENT, user_id bigint NOT NULL, email varchar(50) NOT NULL, attractionId bigint NOT NULL, date varchar(50) NOT NULL , time varchar(50) NOT NULL , price INTEGER NOT NULL, PRIMARY KEY(booking_id))')
+
 	if request.method == "GET":
-		return Response
+		email = session.get('email')
+		if email:
+			get_booking_data_sqlcommand = 'SELECT * FROM booking_data WHERE email = %s'
+			cur.execute(get_booking_data_sqlcommand,[email])
+			result_booking = cur.fetchone()
+			spot_id = result_booking['attractionId']
+			date = result_booking['date']
+			time = result_booking['time']
+			price = result_booking['price']
+
+			get_spot_data_sqlcommand = f'SELECT * FROM tpspot WHERE id = {spot_id}'
+			cur.execute(get_spot_data_sqlcommand)
+			result_spot = cur.fetchone()
+			name = result_spot['name']
+			address = result_spot['address']
+
+
+			image_replaced = result_spot['images'].decode('utf-8').replace("'","").replace("[","").replace("]","").replace(" ","")
+			image_splited = image_replaced.split(",")
+			result_spot['images'] = image_splited
+
+			image = result_spot['images'][0]
+
+			dict = { "data": { "attraction":{ "id": spot_id, "name": name, "address": address, "image": image}, "date": date, "time": time, "price": price }}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+		else:
+			dict = {"error": True, "message": "未登入系統，拒絕存取"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=403)
+		
+
 
 	elif request.method == "POST":
-		return Response
+		attractionId = request.get_json()['attractionId']
+		date = request.get_json()['date']
+		time = request.get_json()['time']
+		price = request.get_json()['price']
+		user_id = session.get('user_id')
+		email = session.get('email')
+		
+
+		delete_booking_sqlcommand = 'DELETE FROM booking_data WHERE email = %s'
+		add_booking_sqlcommand = 'INSERT INTO booking_data (user_id, email, attractionId, date, time, price) VALUES (%s, %s, %s, %s, %s, %s)'
+		val = (user_id, email, attractionId, date, time, price)
+		
+		cur.execute(delete_booking_sqlcommand, [email])
+		mysql.connection.commit()
+		cur.execute(add_booking_sqlcommand,val)
+		mysql.connection.commit()
+
+
+		if attractionId and date and time and price and user_id and email:
+			dict = {"ok": True}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+
+		elif not(attractionId and date and time and price and user_id and email):
+			dict = {"error": True, "message": "建立失敗，輸入不正確或其他原因"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=400)
+
+		elif not(user_id and email):
+			dict = {"error": True, "message": "未登入系統，拒絕存取"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=403)
+		
+		else:
+			dict = {"error": True, "message": "伺服器內部錯誤"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=500)
 
 	elif request.method == "DELETE":
-		return Response
+		email = session.get('email')
+		print(email)
+		delete_booking_sqlcommand = 'DELETE FROM booking_data WHERE email = %s'
+		cur.execute(delete_booking_sqlcommand, [email])
+		mysql.connection.commit()
+
+		if email:
+			dict = {"ok": True}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
+
+		elif not email:
+			dict = { "error": True,"message": "未登入系統，拒絕存取"}
+			print(dict)
+			return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=403)
+
 
 
 #啟動網站
