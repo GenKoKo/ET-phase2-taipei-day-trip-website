@@ -5,32 +5,109 @@
             <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1"/>
             <title>One Day in Taipei GO!</title>
             <link rel="stylesheet" href="/css/main.css" type="text/css">
+            <link rel="stylesheet" href="/css/booking.css" type="text/css">
             <link rel="shortcut icon" href="#"/>
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-            <!-- <script type=module src='/js/header_footer.js'></script> -->
-            <script type="text/javascript" src='/js/login_register.js'></script>
-            <script type="text/javascript" src='/js/booking.js'></script>
+            <script type=module src='/js/header_footer.mjs'></script>
         </head>
         
-        <body onload="detect_login_status();">
+        <body onload="detect_login_status(); get_booking_data(); get_user_data();">
             <div class="container">
+                <!-- <my-header></my-header> -->
                 <div class="nav">
                     <div class="nav-content">
                         <div id="taipei"> <a href='/'>台北一日遊</a> </div>
                         <div class="blank"></div>
                         <div class="nav_button">
-                            <div id="booking">預定行程</div> 
-                            <div id="login">登出系統</div> 
-                            <div id="logout">登入/註冊</div>
+                            <div id="booking" onclick="to_booking_page();">預定行程</div> 
+                            <div id="login"></div> 
+                            <div id="logout"></div>
                         </div>
                     </div>
                 </div>
 
+                <div class="headline">您好，<div class="username"></div>，待預訂的行程如下：</div>
+                <div class="empty_state">目前沒有任何待預訂的行程</div>
 
+                <main>
+
+                    <div class="section">
+                        <div class="picture">
+                            <img class="image">
+                        </div>
+
+                        <div class="infor">
+                            <div class="frame"> 
+                                <div class="title_spot"><p>台北一日遊：</p></div>
+                            </div>
+
+                            <div class="frame">
+                                <div class="title_booking">日期：</div>
+                                <div class="date"></div>
+                            </div>
+
+                            <div class="frame">
+                                <div class="title_booking">時間：</div>
+                                <div class="time"></div>
+                            </div>
+
+                            <div class="frame">
+                                <div class="title_booking">費用：</div>
+                                <div class="price"></div>
+                            </div>
+
+                            <div class="frame">
+                                <div class="title_booking">地點：</div>
+                                <div class="address"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="icon_delete" onclick="booking_delete()"></div>
+
+                    </div>
+
+                    <div class="separator"></div>
+                    
+                    <form name='booking_info'>
+                        <div class="contact_form">
+                            <div class="title_contact">您的聯絡資訊</div>
+                            <div class="title_user">聯絡姓名： <input name="username" type="text"> </div> 
+                            <div class="title_user">連絡信箱： <input name="email" type="email"> </div> 
+                            <div class="title_user">手機號碼： <input name="phone_no" type="tel"> </div> 
+                            <div class="reminder">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。 </div> 
+
+
+                        </div>
+                    </form>
+
+                    <div class="separator"></div>
+                    
+                    <div class="payment">
+                        <div class="title_payment">信用卡付款資訊</div>
+                        <div class="payment_info">卡片號碼： <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="**** **** **** ****"> </div> 
+                        <div class="payment_info">過期時間： <input placeholder="MM / YY"> </div> 
+                        <div class="payment_info">驗證密碼： <input type="tel" inputmode="numeric" pattern="[0-9\s]{3,3}" minlength ='3' maxlength="3" placeholder="CVV"> </div> 
+                    </div>
+                    
+                    <div class="separator"></div>
+                    
+                    <div class="confirm">
+                        <div class="field">
+                            <p>總價：</p>
+                            <div class="price_info"> </div>
+                        </div>
+                        <button class="confirm_payment"> <p>確認訂購並付款</p> </button>
+
+                    </div>
+                
+                </main>
+                
                 
                 <div class="footer">
                     <div>COPYRIGHT © 2021 台北一日遊</div>
                 </div>
+                <!-- <my-footer></my-footer> -->
 
             </div>
             
@@ -73,8 +150,10 @@
                     <div class="popup_question">已經有帳戶了？<div class="toLogin">點此登入</div></div>
                 </div>
             </div>            
-        
+            
 
+            <script type="text/javascript" src='/js/main.js'></script>
+            <script type="text/javascript" src='/js/booking.js'></script>
     
         </body>
-    </html>
+        </html>
