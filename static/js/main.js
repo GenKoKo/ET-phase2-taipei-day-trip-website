@@ -3,26 +3,45 @@
 let localHost = "http://127.0.0.1:3000" // for develop
 let EC2Host = "http://54.168.152.131:3000" //for deploy
 
+let HostNow = EC2Host;
+
 //user api link
-let api_url_user = EC2Host+'/api/user'
+let api_url_user = HostNow+'/api/user'
 //spot api link
-let api_url_spot = EC2Host+"/api/attractions?";
-// //spot id api link
-// let api_url_spot_id = localHost+"api/attraction/";
+let api_url_spot = HostNow+"/api/attractions?";
+//booking api link
+let api_url_booking = HostNow+"/api/booking";
+
+//booking page
+let booking_url = HostNow+"/booking";
 
 
 let login_button = document.querySelector('#login');
 let logout_button = document.querySelector('#logout'); 
+let login_status;
+let username, email;   
+ 
+
 function detect_login_status(){
     axios({
         method: 'GET', 
         url: api_url_user,
     }).then( (res) => {
         logout_button.append('登出系統');
-        console.log(res)    
+        login_status = true;
+        username = res['data']['data']['name'];
+        email = res['data']['data']['email'];
+        localStorage.setItem('username', username);
+        localStorage.setItem('email', email);
+
+        
     }).catch( (err) => {
         login_button.append('登入/註冊');
-        console.log(err)
+        login_status = false;
+        if (location.pathname == "/booking"){
+            location.replace(HostNow)
+        }
+        console.log("🚀 ~ file: login_register.js ~ line 36 ~ detect_login_status ~ err", err)
     })
 }
 
@@ -51,12 +70,13 @@ function user_login(){
         success_message.innerHTML = '';
         error_message.innerHTML = '';
         login_button.innerHTML = '';
+        login_status = true;
         console.log(res);})
-        .catch( (err) => {
+    .catch( (err) => {
         error_message_login.innerHTML = '';
         modal.style['height'] = '285px';
         error_message_login.append('Email或密碼錯誤')
-
+        login_status = false;
         console.log(err);})
 }
 
@@ -97,6 +117,8 @@ function user_register(){
 }
 
 logout_button.addEventListener('click', () =>{
+    localStorage.setItem('username', null);
+    localStorage.setItem('email', null);
     
     axios({
         method: 'DELETE', 
@@ -105,6 +127,10 @@ logout_button.addEventListener('click', () =>{
     .then( (res) =>{
         logout_button.innerHTML = '';
         login_button.append('登入/註冊');
+        login_status = false;
+        if (location.pathname == "/booking"){
+            location.replace(HostNow)
+        }
         console.log(res);})
     .catch( (err) => {console.log(err);})
 
@@ -162,3 +188,60 @@ popup_close.addEventListener('click', ()=>{
     modal_bg.classList.remove('bg_popup')
     modal_bg_register.classList.remove('bg_popup')
 })
+
+
+//login status check for booking
+
+function start_booking(){
+    if(login_status){
+        let pathname = window.location.pathname;
+        let id = pathname.replace('/attraction/','');
+        let booking_detail_form = document.forms['booking_detail'];
+        let selected_date = booking_detail_form.elements.date.value;
+        let selected_time = booking_detail_form.elements.time.value
+        let price;
+        if (selected_time == "am"){
+            selected_time = 'morning'
+            price = 2000;
+        }else if (selected_time == "pm"){
+            selected_time = 'afternoon'
+            price = 2500;
+        }
+        
+        if (selected_date && selected_time){
+            axios({
+                method: 'POST',
+                url: api_url_booking,
+                data:{
+                    "attractionId": id,
+                    "date": selected_date,
+                    "time": selected_time,
+                    "price": price
+                }
+            })
+                .then( res => {
+                    location.replace(booking_url)
+                })
+                .catch( err => {
+                console.log("🚀 ~ file: login_register.js ~ line 211 ~ start_booking ~ err", err)
+                })
+        }
+    }
+    
+    else{
+        modal_bg.classList.add('bg_popup')
+    }
+
+}
+
+
+function to_booking_page(){
+    if (login_status){
+        location.replace(booking_url)
+    }else{
+        modal_bg.classList.add('bg_popup')
+    }
+}
+
+
+
