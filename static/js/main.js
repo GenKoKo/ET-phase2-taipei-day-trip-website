@@ -3,7 +3,7 @@
 let localHost = "http://127.0.0.1:3000" // for develop
 let EC2Host = "http://54.168.152.131:3000" //for deploy
 
-let HostNow = EC2Host;
+let HostNow = localHost;
 
 //user api link
 let api_url_user = HostNow+'/api/user'
@@ -19,7 +19,7 @@ let booking_url = HostNow+"/booking";
 let login_button = document.querySelector('#login');
 let logout_button = document.querySelector('#logout'); 
 let login_status;
-let username, email;   
+let username, email;
  
 
 function detect_login_status(){
@@ -29,10 +29,19 @@ function detect_login_status(){
     }).then( (res) => {
         logout_button.append('登出系統');
         login_status = true;
-        username = res['data']['data']['name'];
-        email = res['data']['data']['email'];
-        localStorage.setItem('username', username);
-        localStorage.setItem('email', email);
+        console.log("🚀 ~ file: main.js ~ line 35 ~ detect_login_status ~ res", res)
+
+        if (location.pathname == "/booking" || location.pathname == "/thankyou"){
+            username = res['data']['data']['name'];
+            email = res['data']['data']['email'];
+            let class_username = document.querySelector('.username');
+            class_username.append(username);
+        
+            let class_username_form = document.querySelector('input[name="username"]');
+            class_username_form.value = username;
+            let class_email_form = document.querySelector('input[name="email"]');
+            class_email_form.value = email;
+        }
 
         
     }).catch( (err) => {
@@ -41,7 +50,7 @@ function detect_login_status(){
         if (location.pathname == "/booking"){
             location.replace(HostNow)
         }
-        console.log("🚀 ~ file: login_register.js ~ line 36 ~ detect_login_status ~ err", err)
+        console.log("🚀 ~ file: main.js ~ line 52 ~ detect_login_status ~ err", err)
     })
 }
 
@@ -49,7 +58,7 @@ let modal = document.querySelector('.modal')
 let error_message_login = document.querySelector('.modal .error_message');
 function user_login(){
     let form = document.forms['login']
-    let login_name, login_email, login_password = '';
+    let login_email, login_password = '';
     login_email = form.elements.email.value;
     console.log("🚀 ~ file: index.html ~ line 164 ~ user_register ~ login_email", login_email)
     login_password = form.elements.password.value;
@@ -70,6 +79,7 @@ function user_login(){
         success_message.innerHTML = '';
         error_message.innerHTML = '';
         login_button.innerHTML = '';
+ 
         login_status = true;
         console.log(res);})
     .catch( (err) => {
@@ -109,6 +119,7 @@ function user_register(){
         success_message.append('註冊成功！請點擊下方登入');
         
         console.log(res);})
+        
         .catch( (err) => {
             modal_register.style['height'] = '345px';
         error_message.append('該Email已被註冊')

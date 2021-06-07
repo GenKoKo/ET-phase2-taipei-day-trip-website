@@ -1,7 +1,7 @@
 localHost = "http://127.0.0.1:3000/" // for develop
 EC2Host = "http://54.168.152.131:3000/" //for deploy
 
-HostNow = EC2Host;
+HostNow = localHost;
 
 let api_url_spot_id = HostNow+"api/attraction/";
 
