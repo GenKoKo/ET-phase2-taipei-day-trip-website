@@ -3,7 +3,7 @@
 let localHost = "http://127.0.0.1:3000" // for develop
 let EC2Host = "http://54.168.152.131:3000" //for deploy
 
-let HostNow = localHost;
+let HostNow = EC2Host;
 
 //user api link
 let api_url_user = HostNow+'/api/user'
