@@ -13,7 +13,7 @@
             <!-- <script type=module src='/js/header_footer.mjs'></script> -->
     </head>
         
-    <body onload="detect_login_status();pathname(); get_booking_no()">  
+    <body onload="detect_login_status(); get_booking_no()">  
         <div class="container">
             <!-- <my-header></my-header> -->
             <div class="nav">
@@ -83,14 +83,9 @@
         
 
 
-        <script type="text/javascript" src='/js/main.js'></script>
-        <script type="text/javascript" src='/js/booking.js'></script>
-
+        
         <script>
-            function pathname(){
-                console.log(location.pathname)
-            }
-
+            
             function get_booking_no(){
                 let url = new URL(document.location);
                 let booking_no = url.searchParams.get('number')
@@ -100,6 +95,8 @@
             }
             
         </script>
+        <script type="text/javascript" src='/js/main.js'></script>
+        <script type="text/javascript" src='/js/booking.js'></script>
 
     </body>
 </html>

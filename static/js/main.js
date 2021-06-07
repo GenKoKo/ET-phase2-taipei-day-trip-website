@@ -3,7 +3,7 @@
 let localHost = "http://127.0.0.1:3000" // for develop
 let EC2Host = "http://54.168.152.131:3000" //for deploy
 
-let HostNow = localHost;
+let HostNow = EC2Host;
 
 //user api link
 let api_url_user = HostNow+'/api/user'
@@ -30,17 +30,20 @@ function detect_login_status(){
         logout_button.append('登出系統');
         login_status = true;
         console.log("🚀 ~ file: main.js ~ line 35 ~ detect_login_status ~ res", res)
+        username = res['data']['data']['name'];
+        email = res['data']['data']['email'];
+        let class_username = document.querySelector('.username');
+        let class_username_form = document.querySelector('input[name="username"]');
+        let class_email_form = document.querySelector('input[name="email"]');
 
-        if (location.pathname == "/booking" || location.pathname == "/thankyou"){
-            username = res['data']['data']['name'];
-            email = res['data']['data']['email'];
-            let class_username = document.querySelector('.username');
+        if (location.pathname == "/booking" ){
             class_username.append(username);
-        
-            let class_username_form = document.querySelector('input[name="username"]');
             class_username_form.value = username;
-            let class_email_form = document.querySelector('input[name="email"]');
             class_email_form.value = email;
+        }
+        
+        else if (location.pathname == "/thankyou"){
+            class_username.append(username);
         }
 
         
@@ -51,6 +54,7 @@ function detect_login_status(){
             location.replace(HostNow)
         }
         console.log("🚀 ~ file: main.js ~ line 52 ~ detect_login_status ~ err", err)
+
     })
 }
 

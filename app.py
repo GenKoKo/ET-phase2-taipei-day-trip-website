@@ -328,8 +328,8 @@ def api_booking():
 def api_orders():
 
 	
-	partner_key = 'partner_HT420xSlLGS3w1XQI7M2H2EU2771I2yKwmQhdQTb1Vamy3UTIAcPzTdn'
-	merchant_id = 'KoolTech_NCCC'
+	partner_key = os.getenv('partner_key')
+	merchant_id = os.getenv('merchant_id')
 	test_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
 	formal_url = 'https://prod.tappaysdk.com/tpc/payment/pay-by-prime'
 	prime = request.get_json()['prime']
