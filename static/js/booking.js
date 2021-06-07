@@ -1,11 +1,44 @@
 
 let api_url_orders = HostNow + "/api/orders"
 
-// 
+
 TPDirect.setupSDK(20607, 'app_D2N3i5RDnFQu7TsSLLmPYq50HpeeWqlvXUtZOSwBSCAyBfQOwPidq5oDykHt', 'sandbox')
-TPDirect.card.setup('#cardview-container')
+// TPDirect.card.setup(cardViewContainer, defaultCardViewStyle)
+// TPDirect.card.setup('#cardview-container')
+// TPDirect.card.setup('#cardview-container', defaultCardViewStyle, { isUsedCcv: true })
+
+
+
+let fields = {
+    number: {
+        // css selector
+        element: '#card-number',
+        placeholder: '**** **** **** ****'
+    },
+    expirationDate: {
+        // DOM object
+        element: document.getElementById('card-expiration-date'),
+        placeholder: 'MM / YY'
+    },
+    ccv: {
+        element: '#card-ccv',
+        placeholder: 'ccv'
+    }
+}
+TPDirect.card.setup({fields: fields})
+
+
+
+
 
 function confirm_payment(){
+
+    let tappay_status = TPDirect.card.getTappayFieldsStatus()
+    console.log("🚀 ~ file: booking.js ~ line 88 ~ confirm_payment ~ tappay_status", tappay_status)
+    if (tappay_status.canGetPrime === false) {
+        console.log('no prime')
+        return
+    }
                 
     // alert("pay!")
     TPDirect.card.getPrime(function (result) {
@@ -36,9 +69,9 @@ function confirm_payment(){
                                 "time": time
                                 },
                         "contact": {
-                            // "name": form.elements.username.value ,
-                            // "email": form.elements.email.value ,
-                            // "phone": form.elements.phone_no.value
+                            "name": document.querySelector('input[name="username"]').value,
+                            "email": document.querySelector('input[name="email"]').value,
+                            "phone": document.querySelector('input[name="phone_no"]').value
                         }
                     }
                 }

@@ -182,7 +182,7 @@ main{
     
 }
 
-.title_user > input, .payment_info > input{
+.title_user > input, .tpfield{
     width: 200px;
     height: 38px;
     left: 81px;

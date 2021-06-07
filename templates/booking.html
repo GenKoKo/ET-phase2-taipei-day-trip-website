@@ -87,11 +87,12 @@
                     
                     <form name='booking_info' >
                         <div class="payment">
+                        <!-- <div class="payment" > -->
                             <div class="title_payment">信用卡付款資訊</div>
-                            <div class="payment_info tpfield" id="card-number">卡片號碼： <input type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="**** **** **** ****"> </div> 
-                            <div class="payment_info tpfield" id="card-expiration-date">過期時間： <input placeholder="MM / YY"> </div> 
-                            <div class="payment_info tpfield" id="card-ccv">驗證密碼： <input type="tel" inputmode="numeric" pattern="[0-9\s]{3,3}" minlength ='3' maxlength="3" placeholder="CVV"> </div> 
-                            <!-- <div id="cardview-container"></div> -->
+                            <div class="payment_info" >卡片號碼： <div class="tpfield" id="card-number"></div> </div> 
+                            <div class="payment_info" >過期時間： <div class="tpfield" id="card-expiration-date"></div> </div> 
+                            <div class="payment_info" >驗證密碼： <div class="tpfield" id="card-ccv"></div>  </div> 
+                            <!-- <div id="cardview-container"> </div> -->
                         </div>
                     </form>
 
