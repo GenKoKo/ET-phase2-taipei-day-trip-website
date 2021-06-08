@@ -225,7 +225,7 @@ def api_user():
 @app.route("/api/booking", methods= ["GET", "POST", "DELETE"])
 def api_booking():
 	cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-	# cur.execute('DROP TABLE booking_data')
+	cur.execute('DROP TABLE booking_data')
 	cur.execute('CREATE TABLE IF NOT EXISTS booking_data (booking_id bigint NOT NULL AUTO_INCREMENT, user_id bigint NOT NULL, email varchar(50) NOT NULL, attractionId bigint NOT NULL, date varchar(50) NOT NULL , time varchar(50) NOT NULL , price INTEGER NOT NULL, booking_no varchar(50), contact_name varchar(50), contact_email varchar(50), contact_phone varchar(50), payment_status INTEGER, PRIMARY KEY(booking_id))')
 	# cur.execute('CREATE TABLE IF NOT EXISTS booking_data (booking_id bigint NOT NULL AUTO_INCREMENT, user_id bigint NOT NULL, email varchar(50) NOT NULL, attractionId bigint NOT NULL, date varchar(50) NOT NULL , time varchar(50) NOT NULL , price INTEGER NOT NULL, booking_no varchar(50), contact_name varchar(50), contact_email varchar(50), contact_phone varchar(50), payment_status INTEGER, PRIMARY KEY(booking_id))')
 	# test_commpand = 'INSERT INTO booking_data (user_id, email, attractionId, date , time,  price, booking_no , contact_name , contact_email, contact_phone , payment_status) VALUSE(%d, %s, %d, %s, %s, %d, %s, %s, %s, %s, %d)'
