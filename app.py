@@ -1,3 +1,4 @@
+# from asyncio.windows_events import NULL
 from flask import *
 from flask import request
 from flask_mysqldb import MySQL,MySQLdb
@@ -398,8 +399,17 @@ def api_orders():
 					mysql.connection.commit()
 					print(dict)
 
+		# python 3.7 up
+		# asyncio.run(main())	
 
-		asyncio.run(main())	
+		# python 3.6 down
+		new_loop = asyncio.new_event_loop()
+		asyncio.set_event_loop(new_loop)
+		loop = asyncio.get_event_loop()
+		# try:
+		loop.run_until_complete(main())
+		# finally:
+			# loop.close()
 				
 		return Response(response=json.dumps(dict, cls=MyEncoder ,indent = 4), status=200)
 		
