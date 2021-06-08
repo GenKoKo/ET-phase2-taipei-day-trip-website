@@ -30,8 +30,8 @@ app.config["MYSQL_PASSWORD"] = os.getenv('MYSQL_PASSWORD')
 app.config["MYSQL_DB"] = os.getenv('MYSQL_DB')
 mysql = MySQL(app)
 
-cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-cur.execute('CREATE TABLE IF NOT EXISTS booking_data (booking_id bigint NOT NULL AUTO_INCREMENT, user_id bigint NOT NULL, email varchar(50) NOT NULL, attractionId bigint NOT NULL, date varchar(50) NOT NULL , time varchar(50) NOT NULL , price INTEGER NOT NULL, booking_no varchar(50), contact_name varchar(50), contact_email varchar(50), contact_phone varchar(50), payment_status INTEGER, PRIMARY KEY(booking_id))')
+# cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+# cur.execute('CREATE TABLE IF NOT EXISTS booking_data (booking_id bigint NOT NULL AUTO_INCREMENT, user_id bigint NOT NULL, email varchar(50) NOT NULL, attractionId bigint NOT NULL, date varchar(50) NOT NULL , time varchar(50) NOT NULL , price INTEGER NOT NULL, booking_no varchar(50), contact_name varchar(50), contact_email varchar(50), contact_phone varchar(50), payment_status INTEGER, PRIMARY KEY(booking_id))')
 
 
 #API content encoder
