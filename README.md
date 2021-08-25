@@ -1,9 +1,9 @@
 # Taipei Day Trip Website
 
 ## Environment
-Front-end: Javascript, HTML, CSS
-Back-end: Python Flask
-Database: MySQL
-Server: AWS EC2
+1. Front-end: Javascript, HTML, CSS
+2. Back-end: Python Flask
+3. Database: MySQL
+4. Server: AWS EC2
 
 
