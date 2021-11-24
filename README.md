@@ -2,7 +2,7 @@
 http://54.168.152.131:3000/
 
 
-## Environment
+## Tech Stack
 1. Front-end: JavaScript, HTML, CSS
 2. Back-end: Python Flask
 3. Database: MySQL
