@@ -13,11 +13,10 @@ http://54.168.152.131:3000/
 2. Infinte Scroll
 3. Image Carousel
 4. Public Travel API linked (text and photo)
-5. Payment API linked (Credit Card - Tap Pay)
-6. Carusollte Phato
-7. Spot search
-8. Membership register/login
-9. Travel course booking
-10. Booked course confirmation
+5. Payment API linked (credit aard - Tap Pay)
+6. Spot search
+7. Membership register/login
+8. Travel course booking
+9. Booked course confirmation
 
 
