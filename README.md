@@ -1,7 +1,5 @@
 # Taipei Day Trip Website
 
-http://54.168.152.131:3000/
-
 
 ## Tech Stack
 1. Front-end: JavaScript, HTML, CSS
